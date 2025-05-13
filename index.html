@@ -1,137 +1,185 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>رادیو بکت | Radio Beckett</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-      text-align: center;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    h1 {
-      color: #ffcc00;
-    }
-    .episode {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 500px;
-      box-shadow: 0 0 10px #00000044;
-    }
-    iframe {
-      border-radius: 12px;
-    }
-    a {
-      color: #ffcc00;
-      text-decoration: none;
-    }
-    .menu {
-      margin-bottom: 20px;
-    }
-    .menu button {
-      margin: 5px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .menu button:hover {
-      opacity: 0.8;
-    }
-    .light {
-      --bg-color: #fff;
-      --text-color: #111;
-      --card-bg: #f2f2f2;
-    }
-    .dark {
-      --bg-color: #111;
-      --text-color: #eee;
-      --card-bg: #222;
-    }
-    .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 0 auto 10px;
-      display: block;
-    }
-    .tagline {
-      font-style: italic;
-      margin-bottom: 20px;
-      color: #ccc;
-    }
-    .advanced-menu {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 30px 0;
-    }
-    .advanced-menu a {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 10px;
-      background-color: #333;
-      color: #ffcc00;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .advanced-menu a:hover {
-      background-color: #444;
-    }
-  </style>
-</head>
-<body class="dark">
-  <div class="menu">
-    <button onclick="setTheme('light')">☀️ حالت روز</button>
-    <button onclick="setTheme('dark')">🌙 حالت شب</button>
-    <button onclick="location.href='https://linktr.ee/behckett'">📬 تماس با ما</button>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رادیو بکت | Radio Beckett</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --light-bg: #fff;
+        --light-text: #111;
+        --light-card: #f2f2f2;
+        --dark-bg: #111;
+        --dark-text: #eee;
+        --dark-card: #222;
+        --accent: #ffcc00;
+      }
 
-<img src="https://drive.google.com/uc?id=140aYFGx_sz3AH08SXYMh5gRgkjixvInP" alt="Radio Beckett Logo" class="logo" />
-  <h1>🎧 رادیو بکت | Radio Beckett</h1>
-  <p class="tagline">در جستجوی معنای باخته!</p>
-  <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
+      body {
+        font-family: 'Vazirmatn', sans-serif;
+        padding: 20px;
+        text-align: center;
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+        transition: background-color 0.3s, color 0.3s;
+      }
 
-  <div class="episode">
-    <h2>اپیزود ۱: دریا هنوز آرام است</h2>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/6ClFjuUDiCD3Jezn6shmpP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+      body.light {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+      }
 
-  <div class="episode">
-    <h2>اپیزود ۲: شلوارهای وصله‌دار</h2>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2aDGR347QlJUM49gSdP6Pv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+      .episode {
+        background: var(--dark-card);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 500px;
+        box-shadow: 0 0 10px #00000044;
+        transition: background 0.3s;
+      }
 
-  <div class="episode">
-    <h2>اپیزود ۳: مدار صفر درجه</h2>
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2KXa9mqe8yAMvXmjp8u4PT?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+      body.light .episode {
+        background: var(--light-card);
+      }
 
-  <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
+      iframe {
+        border-radius: 12px;
+      }
 
-  <div class="advanced-menu">
-    <a href="https://www.instagram.com/behckett" target="_blank">📸 اینستاگرام</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📢 تلگرام</a>
-    <a href="https://castbox.fm/vh/6571514" target="_blank">🎧 کست‌باکس</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">💬 ارسال بازخورد</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📚 پیشنهاد کتاب</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🆘 پشتیبانی</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🎓 ثبت‌نام کلاس خصوصی تدوین</a>
-    <a href="https://linktr.ee/behckett" target="_blank">ℹ️ درباره ما</a>
-  </div>
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
 
-  <script>
-    function setTheme(mode) {
-      document.body.className = mode;
-    }
-  </script>
-</body>
+      .menu {
+        margin-bottom: 20px;
+      }
+
+      .menu button {
+        margin: 5px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        background-color: #333;
+        color: var(--accent);
+      }
+
+      .menu button:hover {
+        background-color: #444;
+      }
+
+      .logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto 10px;
+        display: block;
+      }
+
+      .tagline {
+        font-style: italic;
+        margin-bottom: 20px;
+        color: #ccc;
+      }
+
+      .advanced-menu {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 30px 0;
+      }
+
+      .advanced-menu a {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 10px;
+        background-color: #333;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+
+      .advanced-menu a:hover {
+        background-color: #444;
+      }
+
+      .scroll-top {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #333;
+        color: var(--accent);
+        padding: 10px 14px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        box-shadow: 0 0 10px #00000088;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body class="dark">
+    <div class="menu">
+      <button onclick="setTheme('light')">☀️ حالت روز</button>
+      <button onclick="setTheme('dark')">🌙 حالت شب</button>
+      <button onclick="location.href='https://linktr.ee/behckett'">📬 تماس با ما</button>
+    </div>
+
+    <img src="https://drive.google.com/uc?id=140aYFGx_sz3AH08SXYMh5gRgkjixvInP" alt="Radio Beckett Logo" class="logo" />
+    <h1>🎧 رادیو بکت | Radio Beckett</h1>
+    <p class="tagline">در جستجوی معنای باخته!</p>
+    <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
+
+    <div class="episode">
+      <h2>اپیزود ۱: دریا هنوز آرام است</h2>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/6ClFjuUDiCD3Jezn6shmpP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <div class="episode">
+      <h2>اپیزود ۲: شلوارهای وصله‌دار</h2>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2aDGR347QlJUM49gSdP6Pv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <div class="episode">
+      <h2>اپیزود ۳: مدار صفر درجه</h2>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2KXa9mqe8yAMvXmjp8u4PT?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
+
+    <div class="advanced-menu">
+      <a href="https://www.instagram.com/behckettt/" target="_blank">📸 اینستاگرام</a>
+      <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📢 تلگرام</a>
+      <a href="https://castbox.fm/vh/6571514" target="_blank">🎧 کست‌باکس</a>
+      <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">💬 ارسال بازخورد</a>
+      <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📚 پیشنهاد کتاب</a>
+      <a href="https://t.me/Nodelpunks" target="_blank">🆘 پشتیبانی</a>
+      <a href="https://t.me/Nodelpunks" target="_blank">🎓 ثبت‌نام کلاس خصوصی تدوین</a>
+      <a href="https://linktr.ee/behckett" target="_blank">ℹ️ درباره ما</a>
+    </div>
+
+    <div class="scroll-top" onclick="scrollToTop()">⬆️</div>
+
+    <script>
+      function setTheme(mode) {
+        if (mode === 'light') {
+          document.body.classList.add('light');
+          document.body.classList.remove('dark');
+        } else {
+          document.body.classList.add('dark');
+          document.body.classList.remove('light');
+        }
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    </script>
+  </body>
 </html>
