@@ -1,90 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>رادیو بکت</title>
+  <title>رادیو بکت | Radio Beckett</title>
   <style>
     body {
       font-family: sans-serif;
-      background-color: #121212;
-      color: #f5f5f5;
-      margin: 0;
-      padding: 1rem;
-    }
-    header {
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 1.5rem;
     }
     h1 {
-      font-size: 1.8rem;
-      margin: 0;
+      color: #ffcc00;
     }
     .episode {
-      background-color: #1e1e1e;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      background: #222;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 0 10px #000;
     }
-    .episode h2 {
-      font-size: 1.2rem;
-      margin: 0 0 0.5rem 0;
+    iframe {
+      border-radius: 12px;
     }
-    .episode p {
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-    .player {
-      margin-top: 0.5rem;
-    }
-    .share {
-      display: flex;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    .share button {
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
+    a {
+      color: #ffcc00;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎙️ رادیو بکت</h1>
-    <p>پادکست کتاب‌های صوتی</p>
-  </header>
+  <h1>🎧 رادیو بکت | Radio Beckett</h1>
+  <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
 
   <div class="episode">
-    <h2>اپیزود ۱: شوالیه دو نیم شده</h2>
-    <p>ایتالو کالوینو - ترجمه مهدی سحابی</p>
-    <iframe style="border-radius:12px" src="https://linktr.ee/behckett" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <h2>اپیزود ۱: بارون شکلات</h2>
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/6ClFjuUDiCD3Jezn6shmpP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
 
   <div class="episode">
-    <h2>اپیزود ۲: بوف کور</h2>
-    <p>صادق هدایت</p>
-    <iframe style="border-radius:12px" src="https://linktr.ee/behckett" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <h2>اپیزود ۲</h2>
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2aDGR347QlJUM49gSdP6Pv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
 
-  <div class="share">
-    <button onclick="shareApp()">📤 معرفی به دیگران</button>
+  <div class="episode">
+    <h2>اپیزود ۳</h2>
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/2KXa9mqe8yAMvXmjp8u4PT?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
 
-  <script>
-    function shareApp() {
-      if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.shareText("بیایید رادیو بکت را بشنویم 🎧 https://yourdomain.com");
-      } else {
-        alert("برای اشتراک‌گذاری، لطفاً از طریق تلگرام باز کنید.");
-      }
-    }
-  </script>
+  <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
 </body>
 </html>
