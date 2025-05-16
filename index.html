@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -135,19 +134,8 @@
   <p class="tagline">در جستجوی معنای باخته!</p>
   <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
 
-  <div class="episode">
-    <h2>اپیزود ۱: دریا هنوز آرام است</h2>
-    <iframe src="https://open.spotify.com/embed/episode/6ClFjuUDiCD3Jezn6shmpP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
-
-  <div class="episode">
-    <h2>اپیزود ۲: شلوارهای وصله‌دار</h2>
-    <iframe src="https://open.spotify.com/embed/episode/2aDGR347QlJUM49gSdP6Pv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
-
-  <div class="episode">
-    <h2>اپیزود ۳: مدار صفر درجه</h2>
-    <iframe src="https://open.spotify.com/embed/episode/2KXa9mqe8yAMvXmjp8u4PT?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <div id="rss-episodes">
+    <p>در حال بارگذاری اپیزودهای جدید...</p>
   </div>
 
   <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
@@ -178,6 +166,31 @@
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // نمایش سه اپیزود آخر از RSS
+    async function fetchEpisodes() {
+      const rssUrl = "https://anchor.fm/s/103cea30c/podcast/rss";
+      const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+      const data = await response.json();
+      const container = document.getElementById("rss-episodes");
+
+      container.innerHTML = ""; // پاک‌سازی متن اولیه
+
+      data.items.slice(0, 3).forEach(item => {
+        const epDiv = document.createElement("div");
+        epDiv.className = "episode";
+        epDiv.innerHTML = `
+          <h2>${item.title}</h2>
+          <audio controls style="width: 100%; margin-top: 10px;">
+            <source src="${item.enclosure.link}" type="audio/mpeg">
+            مرورگر شما از پخش صوت پشتیبانی نمی‌کند.
+          </audio>
+        `;
+        container.appendChild(epDiv);
+      });
+    }
+
+    fetchEpisodes();
   </script>
 </body>
 </html>
