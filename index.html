@@ -2,207 +2,113 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>رادیو بکت | Radio Beckett</title>
   <style>
-    @font-face {
-      font-family: 'IranNastaliq';
-      src: url('fonts/IranNastaliq.woff2') format('woff2'),
-           url('fonts/IranNastaliq.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    :root {
-      --light-bg: #fff;
-      --light-text: #111;
-      --light-card: #f2f2f2;
-      --dark-bg: #111;
-      --dark-text: #eee;
-      --dark-card: #222;
-      --accent: #ffcc00;
-    }
-
     body {
-      font-family: 'IranNastaliq', sans-serif;
+      font-family: 'Tahoma', sans-serif;
+      background-color: #111;
+      color: #eee;
       padding: 20px;
       text-align: center;
-      background-color: var(--dark-bg);
-      color: var(--dark-text);
-      transition: background-color 0.3s, color 0.3s;
     }
-
-    body.light {
-      background-color: var(--light-bg);
-      color: var(--light-text);
-    }
-
     .episode {
-      background: var(--dark-card);
+      background-color: #222;
       border-radius: 12px;
-      padding: 20px;
       margin: 20px auto;
-      max-width: 500px;
-      box-shadow: 0 0 10px #00000044;
-      transition: background 0.3s;
+      padding: 15px;
+      max-width: 480px;
+      box-shadow: 0 0 15px #0008;
     }
-
-    body.light .episode {
-      background: var(--light-card);
-    }
-
-    iframe {
-      border-radius: 12px;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .menu {
-      margin-bottom: 20px;
-    }
-
-    .menu button {
-      margin: 5px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      background-color: #333;
-      color: var(--accent);
-    }
-
-    .menu button:hover {
-      background-color: #444;
-    }
-
-    .tagline {
-      font-style: italic;
-      margin-bottom: 20px;
-      color: #ccc;
-    }
-
-    .advanced-menu {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 30px 0;
-    }
-
-    .advanced-menu a {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 10px;
-      background-color: #333;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    .advanced-menu a:hover {
-      background-color: #444;
-    }
-
-    .scroll-top {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background-color: #333;
-      color: var(--accent);
-      padding: 10px 14px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 24px;
-      box-shadow: 0 0 10px #00000088;
-      z-index: 999;
-    }
-
     .episode img {
       width: 100%;
       border-radius: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: 1.4rem;
+      margin: 10px 0;
+      color: #ffcc00;
+    }
+    audio {
+      width: 100%;
+      outline: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      background-color: #333;
     }
   </style>
 </head>
-<body class="dark">
-  <div class="menu">
-    <button onclick="setTheme('light')">☀️ حالت روز</button>
-    <button onclick="setTheme('dark')">🌙 حالت شب</button>
-    <button onclick="location.href='https://linktr.ee/behckett'">📬 تماس با ما</button>
-  </div>
-
+<body>
   <h1>🎧 رادیو بکت | Radio Beckett</h1>
-  <p class="tagline">در جستجوی معنای باخته!</p>
-  <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
-
-  <div id="episodes-container">
-    <!-- اپیزودها به‌صورت خودکار اینجا بارگذاری می‌شوند -->
-  </div>
-
-  <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
-
-  <div class="advanced-menu">
-    <a href="https://www.instagram.com/behckettt/" target="_blank">📸 اینستاگرام</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📢 تلگرام</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">💬 ارسال بازخورد</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📚 پیشنهاد کتاب</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🆘 پشتیبانی</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🎓 ثبت‌نام کلاس خصوصی تدوین</a>
-    <a href="https://linktr.ee/behckett" target="_blank">ℹ️ درباره ما</a>
-  </div>
-
-  <div class="scroll-top" onclick="scrollToTop()">⬆️</div>
+  <p>آخرین سه اپیزود:</p>
+  <div id="episodes-container"></div>
 
   <script>
-    function setTheme(mode) {
-      if (mode === 'light') {
-        document.body.classList.add('light');
-        document.body.classList.remove('dark');
-      } else {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
-      }
-    }
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     async function loadEpisodes() {
       const rssUrl = 'https://anchor.fm/s/103cea30c/podcast/rss';
+
       try {
         const response = await fetch(rssUrl);
         const text = await response.text();
         const parser = new DOMParser();
-        const xml = parser.parseFromString(text, 'application/xml');
+        const xml = parser.parseFromString(text, "application/xml");
+
         const items = xml.querySelectorAll('item');
         const container = document.getElementById('episodes-container');
+
+        // پاک کردن محتوا قبل از بارگذاری
+        container.innerHTML = '';
+
         for (let i = 0; i < 3 && i < items.length; i++) {
           const item = items[i];
           const title = item.querySelector('title')?.textContent || 'بدون عنوان';
+
+          // دریافت لینک صوتی از enclosure
           const enclosure = item.querySelector('enclosure');
           const audioUrl = enclosure?.getAttribute('url') || '';
-          const imageUrl = item.querySelector('itunes\\:image')?.getAttribute('href') || '';
+
+          // دریافت کاور از itunes:image اپیزود (اگر وجود داشت)
+          let imageUrl = '';
+          const itunesImage = item.querySelector('itunes\\:image');
+          if (itunesImage) {
+            imageUrl = itunesImage.getAttribute('href') || '';
+          }
+
+          // اگر کاور در itunes:image نبود، از media:content بگیر
+          if (!imageUrl) {
+            const mediaContent = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0];
+            if (mediaContent) {
+              imageUrl = mediaContent.getAttribute('url') || '';
+            }
+          }
+
+          // اگر باز هم نبود، کاور کلی پادکست را جایگزین کن
+          if (!imageUrl) {
+            const podcastImage = xml.querySelector('channel > image > url');
+            if (podcastImage) {
+              imageUrl = podcastImage.textContent;
+            }
+          }
+
+          // ساختار HTML برای هر اپیزود
           const episodeDiv = document.createElement('div');
           episodeDiv.className = 'episode';
           episodeDiv.innerHTML = `
             ${imageUrl ? `<img src="${imageUrl}" alt="${title}">` : ''}
             <h2>${title}</h2>
-            ${audioUrl ? `<audio controls src="${audioUrl}"></audio>` : '<p>فایل صوتی در دسترس نیست.</p>'}
+            ${audioUrl ? `<audio controls src="${audioUrl}"></audio>` : '<p>فایل صوتی موجود نیست.</p>'}
           `;
+
           container.appendChild(episodeDiv);
         }
       } catch (error) {
         console.error('خطا در بارگذاری اپیزودها:', error);
+        document.getElementById('episodes-container').innerHTML = '<p>خطا در بارگذاری اپیزودها. لطفاً بعداً تلاش کنید.</p>';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadEpisodes);
+    loadEpisodes();
   </script>
 </body>
 </html>
