@@ -134,7 +134,8 @@
   <p class="tagline">در جستجوی معنای باخته!</p>
   <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
 
-  <div id="rss-episodes">
+  <!-- اینجا اپیزودها لود می‌شوند -->
+  <div id="episodes-container">
     <p>در حال بارگذاری اپیزودهای جدید...</p>
   </div>
 
@@ -167,30 +168,42 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // نمایش سه اپیزود آخر از RSS
-    async function fetchEpisodes() {
-      const rssUrl = "https://anchor.fm/s/103cea30c/podcast/rss";
-      const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
-      const data = await response.json();
-      const container = document.getElementById("rss-episodes");
+    async function loadEpisodes() {
+      const container = document.getElementById('episodes-container');
+      try {
+        const response = await fetch('https://anchor.fm/s/103cea30c/podcast/rss');
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "application/xml");
+        const items = xml.querySelectorAll("item");
+        container.innerHTML = "";
 
-      container.innerHTML = ""; // پاک‌سازی متن اولیه
+        for (let i = 0; i < 3 && i < items.length; i++) {
+          const item = items[i];
+          const title = item.querySelector("title")?.textContent ?? "بدون عنوان";
+          const link = item.querySelector("link")?.textContent;
+          const spotifyIdMatch = link.match(/episode\/([^/?]+)/);
+          const spotifyId = spotifyIdMatch ? spotifyIdMatch[1] : null;
 
-      data.items.slice(0, 3).forEach(item => {
-        const epDiv = document.createElement("div");
-        epDiv.className = "episode";
-        epDiv.innerHTML = `
-          <h2>${item.title}</h2>
-          <audio controls style="width: 100%; margin-top: 10px;">
-            <source src="${item.enclosure.link}" type="audio/mpeg">
-            مرورگر شما از پخش صوت پشتیبانی نمی‌کند.
-          </audio>
-        `;
-        container.appendChild(epDiv);
-      });
+          if (spotifyId) {
+            const episodeEl = document.createElement("div");
+            episodeEl.className = "episode";
+            episodeEl.innerHTML = `
+              <h2>${title}</h2>
+              <iframe src="https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator"
+                      width="100%" height="152" frameborder="0" allowfullscreen
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"></iframe>`;
+            container.appendChild(episodeEl);
+          }
+        }
+      } catch (err) {
+        container.innerHTML = "<p>مشکلی در بارگذاری اپیزودها رخ داد.</p>";
+        console.error("خطا در دریافت RSS:", err);
+      }
     }
 
-    fetchEpisodes();
+    loadEpisodes();
   </script>
 </body>
 </html>
