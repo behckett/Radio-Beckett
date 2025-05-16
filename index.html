@@ -1,88 +1,182 @@
-<div id="player-container" style="max-width:600px; margin:auto; font-family: Tahoma, sans-serif;"></div>
-
-<script>
-  const rssUrl = "https://anchor.fm/s/103cea30c/podcast/rss";
-
-  // لینک های اختصاصی و کاور اختصاصی برای سه اپیزود آخر
-  const specialEpisodes = {
-    "25": {
-      url: "https://spotifycreators-web.app.link/e/MsHbzp6DqTb",
-      cover: "https://i.scdn.co/image/ab6765630000ba8a8e0998c6221e44bc6d3a61e2"
-    },
-    "24": {
-      url: "https://spotifycreators-web.app.link/e/NLXVQq6DqTb",
-      cover: "https://i.scdn.co/image/ab6765630000ba8afc998cc6221e44bc6d3a62f0"
-    },
-    "23": {
-      url: "https://spotifycreators-web.app.link/e/UIkqas6DqTb",
-      cover: "https://i.scdn.co/image/ab6765630000ba8a7c1238c6221e44bc6d3a600a"
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رادیو بکت | Radio Beckett</title>
+  <style>
+    @font-face {
+      font-family: 'IranNastaliq';
+      src: url('fonts/IranNastaliq.woff2') format('woff2'),
+           url('fonts/IranNastaliq.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
     }
-  };
 
-  async function loadEpisodes() {
-    const container = document.getElementById("player-container");
-    container.innerHTML = "<p>در حال بارگذاری...</p>";
-
-    try {
-      const res = await fetch(rssUrl);
-      const rssText = await res.text();
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(rssText, "application/xml");
-
-      // کاور کلی پادکست
-      const channelImage = xml.querySelector('channel > itunes\\:image')?.getAttribute('href') || "";
-
-      const items = xml.querySelectorAll("item");
-
-      container.innerHTML = ""; // پاک کردن متن بارگذاری
-
-      items.forEach((item) => {
-        const title = item.querySelector("title")?.textContent || "بدون عنوان";
-        const enclosure = item.querySelector("enclosure");
-        const audioUrl = enclosure?.getAttribute("url") || "";
-        const episodeNumber = getEpisodeNumber(title);
-
-        // اگر اپیزود در specialEpisodes هست کاور و لینک اختصاصی بگیر
-        let coverUrl = channelImage;
-        let episodeLink = audioUrl;
-
-        if (episodeNumber && specialEpisodes[episodeNumber]) {
-          coverUrl = specialEpisodes[episodeNumber].cover;
-          episodeLink = specialEpisodes[episodeNumber].url;
-        }
-
-        // ساختار هر اپیزود
-        const episodeDiv = document.createElement("div");
-        episodeDiv.className = "episode";
-        episodeDiv.style.display = "flex";
-        episodeDiv.style.alignItems = "center";
-        episodeDiv.style.gap = "12px";
-        episodeDiv.style.marginBottom = "20px";
-        episodeDiv.style.borderBottom = "1px solid #ddd";
-        episodeDiv.style.paddingBottom = "10px";
-
-        episodeDiv.innerHTML = `
-          <img src="${coverUrl}" alt="کاور اپیزود ${episodeNumber || ''}" style="width:70px; height:70px; object-fit:cover; border-radius:10px;">
-          <div style="flex:1; text-align:right;">
-            <h3 style="margin:0 0 8px 0; font-weight: 600;">${title}</h3>
-            <audio controls src="${episodeLink}" style="width:100%; border-radius:8px;"></audio>
-          </div>
-        `;
-
-        container.appendChild(episodeDiv);
-      });
-
-    } catch (error) {
-      container.innerHTML = "<p>خطا در بارگذاری اپیزودها. لطفا بعدا تلاش کنید.</p>";
-      console.error(error);
+    :root {
+      --light-bg: #fff;
+      --light-text: #111;
+      --light-card: #f2f2f2;
+      --dark-bg: #111;
+      --dark-text: #eee;
+      --dark-card: #222;
+      --accent: #ffcc00;
     }
-  }
 
-  // استخراج شماره اپیزود از عنوان (اعداد داخل عنوان)
-  function getEpisodeNumber(title) {
-    const match = title.match(/(\d+)/);
-    return match ? match[1] : null;
-  }
+    body {
+      font-family: 'IranNastaliq', sans-serif;
+      padding: 20px;
+      text-align: center;
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-  loadEpisodes();
-</script>
+    body.light {
+      background-color: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    .episode {
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 0 10px #00000044;
+      transition: background 0.3s;
+    }
+
+    body.light .episode {
+      background: var(--light-card);
+    }
+
+    iframe {
+      border-radius: 12px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .menu {
+      margin-bottom: 20px;
+    }
+
+    .menu button {
+      margin: 5px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #333;
+      color: var(--accent);
+    }
+
+    .menu button:hover {
+      background-color: #444;
+    }
+
+    .tagline {
+      font-style: italic;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+
+    .advanced-menu {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 30px 0;
+    }
+
+    .advanced-menu a {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background-color: #333;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .advanced-menu a:hover {
+      background-color: #444;
+    }
+
+    .scroll-top {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #333;
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 0 10px #00000088;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="menu">
+    <button onclick="setTheme('light')">☀️ حالت روز</button>
+    <button onclick="setTheme('dark')">🌙 حالت شب</button>
+    <button onclick="location.href='https://linktr.ee/behckett'">📬 تماس با ما</button>
+  </div>
+
+  <h1>🎧 رادیو بکت | Radio Beckett</h1>
+  <p class="tagline">در جستجوی معنای باخته!</p>
+  <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
+
+  <div class="episode">
+    <h2>اپیزود ۱: اولین بریده – در ستایش نابجا</h2>
+    <iframe src="https://open.spotify.com/embed/episode/4k0TXZOquqmYNSR8Ec7CJV?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+
+  <div class="episode">
+    <h2>اپیزود ۲: بریده دوم – سطرهایی از «بوف کور»</h2>
+    <iframe src="https://open.spotify.com/embed/episode/2YdJ8kSrCgHx7A8PKgsFjl?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+
+  <div class="episode">
+    <h2>اپیزود ۳: بریده سوم – از آوای مرغان</h2>
+    <iframe src="https://open.spotify.com/embed/episode/27F8LlezwWVnKICa8MvcHR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+
+  <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
+
+  <div class="advanced-menu">
+    <a href="https://www.instagram.com/behckettt/" target="_blank">📸 اینستاگرام</a>
+    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📢 تلگرام</a>
+    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">💬 ارسال بازخورد</a>
+    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📚 پیشنهاد کتاب</a>
+    <a href="https://t.me/Nodelpunks" target="_blank">🆘 پشتیبانی</a>
+    <a href="https://t.me/Nodelpunks" target="_blank">🎓 ثبت‌نام کلاس خصوصی تدوین</a>
+    <a href="https://linktr.ee/behckett" target="_blank">ℹ️ درباره ما</a>
+  </div>
+
+  <div class="scroll-top" onclick="scrollToTop()">⬆️</div>
+
+  <script>
+    function setTheme(mode) {
+      if (mode === 'light') {
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
+      } else {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
