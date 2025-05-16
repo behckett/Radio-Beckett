@@ -121,6 +121,14 @@
       box-shadow: 0 0 10px #00000088;
       z-index: 999;
     }
+
+    .episode img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body class="dark">
@@ -134,9 +142,8 @@
   <p class="tagline">در جستجوی معنای باخته!</p>
   <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
 
-  <!-- اینجا اپیزودها لود می‌شوند -->
   <div id="episodes-container">
-    <p>در حال بارگذاری اپیزودهای جدید...</p>
+    <p>در حال بارگذاری اپیزودها...</p>
   </div>
 
   <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
@@ -176,6 +183,11 @@
         const parser = new DOMParser();
         const xml = parser.parseFromString(xmlText, "application/xml");
         const items = xml.querySelectorAll("item");
+
+        // دریافت تصویر کلی پادکست
+        let defaultImage = xml.querySelector("channel > itunes\\:image, channel > image > url");
+        defaultImage = defaultImage?.getAttribute("href") || defaultImage?.textContent || "";
+
         container.innerHTML = "";
 
         for (let i = 0; i < 3 && i < items.length; i++) {
@@ -185,10 +197,15 @@
           const spotifyIdMatch = link.match(/episode\/([^/?]+)/);
           const spotifyId = spotifyIdMatch ? spotifyIdMatch[1] : null;
 
+          // دریافت تصویر اپیزود
+          let imageTag = item.querySelector("itunes\\:image");
+          let episodeImage = imageTag?.getAttribute("href") || defaultImage;
+
           if (spotifyId) {
             const episodeEl = document.createElement("div");
             episodeEl.className = "episode";
             episodeEl.innerHTML = `
+              <img src="${episodeImage}" alt="کاور اپیزود" />
               <h2>${title}</h2>
               <iframe src="https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator"
                       width="100%" height="152" frameborder="0" allowfullscreen
@@ -203,7 +220,8 @@
       }
     }
 
-    loadEpisodes();
+    // بارگذاری اپیزودها پس از بارگذاری صفحه
+    window.addEventListener('DOMContentLoaded', loadEpisodes);
   </script>
 </body>
 </html>
