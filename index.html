@@ -138,6 +138,269 @@
   <p class="tagline">در جستجوی معنای باخته!</p>
   <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
 
+ <!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>رادیو بکت | Radio Beckett</title>
+
+<style>
+
+:root{
+--bg:#111;
+--card:#222;
+--text:#eee;
+--accent:#ffcc00;
+}
+
+.light{
+--bg:#fff;
+--card:#f2f2f2;
+--text:#111;
+}
+
+body{
+margin:0;
+padding:20px;
+background:var(--bg);
+color:var(--text);
+font-family:tahoma,sans-serif;
+text-align:center;
+transition:.3s;
+}
+
+h1{
+margin-top:20px;
+}
+
+.menu{
+margin-bottom:20px;
+}
+
+.menu button{
+padding:10px 15px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+#search{
+width:90%;
+max-width:600px;
+padding:12px;
+border-radius:10px;
+border:none;
+margin:20px auto;
+display:block;
+}
+
+.episode{
+max-width:700px;
+margin:15px auto;
+padding:20px;
+border-radius:12px;
+background:var(--card);
+}
+
+.episode h2{
+font-size:18px;
+line-height:1.8;
+}
+
+.episode p{
+line-height:1.8;
+font-size:14px;
+}
+
+a{
+color:var(--accent);
+text-decoration:none;
+}
+
+.scroll-top{
+position:fixed;
+left:20px;
+bottom:20px;
+width:50px;
+height:50px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#333;
+color:#fff;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="menu">
+<button onclick="setTheme('light')">☀️ روز</button>
+<button onclick="setTheme('dark')">🌙 شب</button>
+</div>
+
+<h1>🎧 رادیو بکت</h1>
+
+<p>در جستجوی معنای باخته!</p>
+
+<input
+id="search"
+placeholder="جستجوی اپیزود..."
+
+>
+
+<div id="episodes"></div>
+
+<div class="scroll-top" onclick="scrollToTop()">
+⬆
+</div>
+
+<script>
+
+let allEpisodes=[];
+
+async function loadRSS(url){
+
+try{
+
+const res=await fetch(url);
+const text=await res.text();
+
+const parser=new DOMParser();
+const xml=parser.parseFromString(text,"text/xml");
+
+xml.querySelectorAll("item").forEach(item=>{
+
+allEpisodes.push({
+
+title:item.querySelector("title")?.textContent || "",
+
+description:item.querySelector("description")?.textContent || "",
+
+link:item.querySelector("link")?.textContent || ""
+
+});
+
+});
+
+renderEpisodes();
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+function renderEpisodes(search=""){
+
+const container=document.getElementById("episodes");
+
+container.innerHTML="";
+
+allEpisodes
+
+.filter(ep=>
+
+ep.title
+.toLowerCase()
+.includes(search.toLowerCase())
+
+)
+
+.forEach(ep=>{
+
+const div=document.createElement("div");
+
+div.className="episode";
+
+div.innerHTML=`
+
+<h2>${ep.title}</h2>
+
+<p>
+
+${ep.description
+.replace(/<[^>]*>/g,"")
+.substring(0,300)}
+
+</p>
+
+<a
+href="${ep.link}"
+target="_blank"
+>
+
+🎧 شنیدن اپیزود
+
+</a>
+
+`;
+
+container.appendChild(div);
+
+});
+
+}
+
+document
+.getElementById("search")
+.addEventListener("input",e=>{
+
+renderEpisodes(e.target.value);
+
+});
+
+function setTheme(mode){
+
+document.body.className=mode;
+
+localStorage.setItem(
+"theme",
+mode
+);
+
+}
+
+window.onload=()=>{
+
+const savedTheme=
+localStorage.getItem("theme")
+|| "dark";
+
+document.body.className=savedTheme;
+
+loadRSS("rss/borideh.xml");
+loadRSS("rss/boofkoor.xml");
+
+};
+
+function scrollToTop(){
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
+
   <div class="episode">
     <h2>اپیزود ۲۵ | بریده | فصل اول | سایه‌های ناتمام | وسواس (مسافری غریب و حیران) | بهرام صادقی | رادیو بکت</h2>
     <iframe src="https://open.spotify.com/embed/episode/4k0TXZOquqmYNSR8Ec7CJV?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
