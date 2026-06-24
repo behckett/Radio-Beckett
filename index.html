@@ -9,36 +9,38 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#080808;
-  --surface:#111;
-  --card:#161616;
-  --card2:#1e1e1e;
-  --border:#252525;
-  --border2:#333;
-  --text:#f0f0f0;
-  --muted:#666;
-  --muted2:#888;
+  --bg:#07070a;
+  --surface:#0f0f14;
+  --card:#141419;
+  --card2:#1c1c24;
+  --border:#22222e;
+  --border2:#2e2e3d;
+  --text:#eeeef5;
+  --muted:#55556a;
+  --muted2:#8888a8;
   --accent:#f5c518;
   --accent2:#ffd84d;
-  --glow:rgba(245,197,24,0.18);
-  --glow2:rgba(245,197,24,0.08);
-  --r:18px;
-  --r2:12px;
+  --accent3:#ff9f43;
+  --glow:rgba(245,197,24,0.22);
+  --glow2:rgba(245,197,24,0.07);
+  --r:16px;
+  --r2:10px;
   --ease:cubic-bezier(.4,0,.2,1);
 }
 body.light{
-  --bg:#f0ede8;
-  --surface:#e8e5e0;
+  --bg:#f2f0ec;
+  --surface:#e8e6e1;
   --card:#fff;
-  --card2:#f5f3ef;
-  --border:#ddd;
-  --border2:#ccc;
-  --text:#111;
-  --muted:#999;
-  --muted2:#777;
+  --card2:#f6f4f0;
+  --border:#e0ddd8;
+  --border2:#ccc8c0;
+  --text:#111118;
+  --muted:#aaa8a0;
+  --muted2:#777770;
   --accent:#c49a00;
   --accent2:#f5c518;
-  --glow:rgba(196,154,0,0.15);
+  --accent3:#e08800;
+  --glow:rgba(196,154,0,0.18);
   --glow2:rgba(196,154,0,0.06);
 }
 
@@ -49,216 +51,156 @@ body{
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
-  transition:background .4s var(--ease),color .4s var(--ease);
   -webkit-font-smoothing:antialiased;
+  transition:background .4s,color .4s;
 }
 
-/* ─── AURORA BACKGROUND ─── */
-.aurora{
-  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-}
-.aurora-orb{
-  position:absolute;border-radius:50%;filter:blur(120px);opacity:.12;
-  animation:drift 12s ease-in-out infinite;
-}
-.aurora-orb:nth-child(1){width:600px;height:400px;top:-100px;right:-150px;background:var(--accent);animation-delay:0s}
-.aurora-orb:nth-child(2){width:400px;height:500px;bottom:-100px;left:-100px;background:#9b59b6;animation-delay:-4s}
-.aurora-orb:nth-child(3){width:300px;height:300px;top:40%;left:40%;background:#1abc9c;animation-delay:-8s}
-@keyframes drift{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%{transform:translate(30px,-20px) scale(1.1)}
-  66%{transform:translate(-20px,15px) scale(0.95)}
-}
-body.light .aurora-orb{opacity:.06}
+/* ── AURORA ── */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.ao{position:absolute;border-radius:50%;filter:blur(140px);opacity:.09;animation:drift 14s ease-in-out infinite}
+.ao:nth-child(1){width:700px;height:450px;top:-120px;right:-180px;background:var(--accent);animation-delay:0s}
+.ao:nth-child(2){width:500px;height:600px;bottom:-120px;left:-120px;background:#7b3fe4;animation-delay:-5s}
+.ao:nth-child(3){width:350px;height:350px;top:45%;left:38%;background:#1abc9c;animation-delay:-10s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(35px,-25px) scale(1.08)}66%{transform:translate(-25px,18px) scale(.94)}}
+body.light .ao{opacity:.05}
 
-/* ─── TOPBAR ─── */
+/* ── TOPBAR ── */
 .topbar{
   position:sticky;top:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;height:56px;
-  background:rgba(8,8,8,.8);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  padding:0 20px;height:58px;
+  background:rgba(7,7,10,.82);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
   border-bottom:1px solid var(--border);
-  transition:background .4s;
 }
-body.light .topbar{background:rgba(240,237,232,.85)}
+body.light .topbar{background:rgba(242,240,236,.88)}
 .topbar-logo{
-  font-size:1rem;font-weight:900;color:var(--accent);
-  display:flex;align-items:center;gap:8px;letter-spacing:-.3px;
+  display:flex;align-items:center;gap:10px;text-decoration:none;
 }
-.topbar-logo .logo-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--accent);
-  animation:blink 2s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow)}50%{opacity:.5;box-shadow:0 0 0 6px transparent}}
-.topbar-right{display:flex;gap:8px;align-items:center}
+.logo-img{height:36px;width:auto;object-fit:contain}
+.logo-fallback{font-size:1.05rem;font-weight:900;color:var(--accent);letter-spacing:-.3px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 2.2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow)}50%{opacity:.4;box-shadow:0 0 0 7px transparent}}
+.topbar-right{display:flex;gap:6px;align-items:center}
 .tb-btn{
-  width:36px;height:36px;border:none;border-radius:50%;
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--border2);
   background:var(--card2);color:var(--text);
-  cursor:pointer;font-size:.9rem;
+  cursor:pointer;font-size:.88rem;
   display:flex;align-items:center;justify-content:center;
-  transition:all .25s;border:1px solid var(--border);
-  text-decoration:none;
+  transition:all .22s;text-decoration:none;
 }
-.tb-btn:hover{background:var(--border2);transform:scale(1.1);border-color:var(--accent)}
+.tb-btn:hover{background:var(--border2);transform:scale(1.08);border-color:var(--accent)}
 
-/* ─── HERO ─── */
+/* ── HERO ── */
 .hero{
   position:relative;z-index:1;
-  text-align:center;padding:52px 20px 36px;
+  text-align:center;padding:56px 20px 32px;
 }
 .hero-eyebrow{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--glow2);border:1px solid rgba(245,197,24,.3);
-  color:var(--accent);font-size:.72rem;font-weight:700;
-  padding:5px 14px;border-radius:100px;letter-spacing:.08em;
-  margin-bottom:20px;
-  animation:fadeUp .6s var(--ease) both;
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--glow2);border:1px solid rgba(245,197,24,.28);
+  color:var(--accent);font-size:.7rem;font-weight:700;
+  padding:5px 16px;border-radius:100px;letter-spacing:.1em;
+  margin-bottom:22px;animation:fadeUp .55s var(--ease) both;
 }
-.live-dot{width:6px;height:6px;border-radius:50%;background:#ff4444;animation:blink 1.5s infinite}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#ff4040;animation:blink 1.4s infinite}
 .hero h1{
-  font-size:clamp(2.2rem,9vw,4rem);
-  font-weight:900;line-height:1.1;letter-spacing:-.02em;
-  margin-bottom:10px;
-  animation:fadeUp .65s .1s var(--ease) both;
+  font-size:clamp(2rem,8vw,3.6rem);
+  font-weight:900;line-height:1.1;letter-spacing:-.025em;
+  margin-bottom:12px;animation:fadeUp .6s .08s var(--ease) both;
 }
 .hero h1 em{
   font-style:normal;color:transparent;
-  background:linear-gradient(135deg,var(--accent),var(--accent2),#ff9f43);
+  background:linear-gradient(130deg,var(--accent),var(--accent2),var(--accent3));
   -webkit-background-clip:text;background-clip:text;
-  background-size:200% auto;
-  animation:shimmerText 3s linear infinite;
+  background-size:220% auto;animation:shimmer 3.5s linear infinite;
 }
-@keyframes shimmerText{0%{background-position:0%}100%{background-position:200%}}
-.hero-sub{
-  font-size:.95rem;color:var(--muted2);font-weight:300;
-  margin-bottom:32px;
-  animation:fadeUp .65s .18s var(--ease) both;
-}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:220%}}
+.hero-sub{font-size:.92rem;color:var(--muted2);font-weight:300;margin-bottom:30px;animation:fadeUp .6s .15s var(--ease) both}
 
-/* ─── SEARCH ─── */
-.search-container{
-  position:relative;max-width:540px;margin:0 auto 24px;
-  animation:fadeUp .65s .25s var(--ease) both;
+/* ── SEARCH ── */
+.search-wrap{
+  position:relative;max-width:520px;margin:0 auto 28px;
+  animation:fadeUp .6s .2s var(--ease) both;
 }
-.search-icon{
-  position:absolute;top:50%;right:18px;transform:translateY(-50%);
-  color:var(--muted);pointer-events:none;font-size:1rem;
-}
+.search-ico{position:absolute;top:50%;right:18px;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:.9rem}
 #searchInput{
-  width:100%;padding:14px 50px 14px 20px;
+  width:100%;padding:13px 48px 13px 20px;
   border:1.5px solid var(--border2);border-radius:100px;
   background:var(--card);color:var(--text);
-  font-family:inherit;font-size:.92rem;outline:none;
-  transition:all .3s var(--ease);
-  box-shadow:0 4px 20px rgba(0,0,0,.15);
+  font-family:inherit;font-size:.9rem;outline:none;
+  transition:all .3s;box-shadow:0 4px 24px rgba(0,0,0,.18);
 }
-#searchInput:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 4px var(--glow),0 4px 20px rgba(0,0,0,.2);
-}
+#searchInput:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--glow),0 4px 24px rgba(0,0,0,.22)}
 #searchInput::placeholder{color:var(--muted)}
 
-/* ─── SHOW TABS ─── */
+/* ── TABS ── */
 .tabs{
-  display:flex;gap:0;
-  max-width:700px;margin:0 auto 40px;
+  display:flex;gap:0;max-width:680px;margin:0 auto 36px;
   background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:4px;
-  overflow-x:auto;
-  animation:fadeUp .65s .3s var(--ease) both;
+  border-radius:var(--r);padding:4px;overflow-x:auto;
+  animation:fadeUp .6s .25s var(--ease) both;
   -ms-overflow-style:none;scrollbar-width:none;
 }
 .tabs::-webkit-scrollbar{display:none}
 .tab{
-  flex:1;min-width:90px;
-  padding:10px 14px;border:none;border-radius:var(--r2);
+  flex:1;min-width:82px;padding:9px 12px;border:none;border-radius:var(--r2);
   background:transparent;color:var(--muted2);
-  font-family:inherit;font-size:.8rem;font-weight:600;
-  cursor:pointer;transition:all .3s var(--ease);
-  white-space:nowrap;
-  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:inherit;font-size:.76rem;font-weight:600;
+  cursor:pointer;transition:all .28s;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;gap:5px;
 }
 .tab:hover{color:var(--text);background:var(--card2)}
-.tab.active{
-  background:var(--accent);color:#000;
-  box-shadow:0 4px 16px var(--glow);
-}
-.tab .tab-icon{font-size:1.1rem}
-.tab .tab-badge{
-  background:rgba(0,0,0,.2);
-  font-size:.65rem;padding:1px 6px;border-radius:100px;
-}
-.tab.active .tab-badge{background:rgba(0,0,0,.25)}
+.tab.active{background:var(--accent);color:#000;box-shadow:0 4px 18px var(--glow)}
+.tab-badge{background:rgba(0,0,0,.18);font-size:.6rem;padding:1px 5px;border-radius:100px}
+.tab.active .tab-badge{background:rgba(0,0,0,.22)}
 
-/* ─── MAIN ─── */
-main{
-  position:relative;z-index:1;
-  max-width:720px;margin:0 auto;
-  padding:0 14px 100px;
-}
+/* ── MAIN ── */
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 14px 120px}
 
-/* ─── SHOW HEADER ─── */
+/* ── SHOW HEADER ── */
 .show-header{
   display:flex;align-items:center;gap:14px;
-  padding:20px;background:var(--card);
+  padding:18px 20px;background:var(--card);
   border:1px solid var(--border);border-radius:var(--r);
-  margin-bottom:20px;
-  opacity:0;transform:translateY(16px);
-  transition:all .5s var(--ease);
+  margin-bottom:16px;
+  opacity:0;transform:translateY(14px);
+  transition:all .45s var(--ease);
 }
 .show-header.visible{opacity:1;transform:none}
 .show-cover{
-  width:72px;height:72px;border-radius:var(--r2);
+  width:68px;height:68px;border-radius:var(--r2);
   display:flex;align-items:center;justify-content:center;
-  font-size:2rem;flex-shrink:0;
-  position:relative;overflow:hidden;
+  font-size:1.9rem;flex-shrink:0;position:relative;overflow:hidden;
 }
-.show-cover::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
-}
+.show-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent)}
 .show-info{flex:1;min-width:0}
-.show-name{font-size:1.2rem;font-weight:900;margin-bottom:4px}
-.show-desc{font-size:.78rem;color:var(--muted2);line-height:1.5}
-.show-stats{display:flex;gap:12px;margin-top:8px}
-.show-stat{
-  font-size:.7rem;color:var(--muted);
-  display:flex;align-items:center;gap:4px;
-}
+.show-name{font-size:1.1rem;font-weight:900;margin-bottom:3px}
+.show-desc{font-size:.76rem;color:var(--muted2);line-height:1.5}
+.show-stats{display:flex;gap:10px;margin-top:7px;align-items:center}
+.show-stat{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:3px}
 .show-stat strong{color:var(--accent)}
+.rss-btn{
+  font-size:.65rem;color:inherit;text-decoration:none;
+  border:1px solid var(--border2);border-radius:6px;padding:2px 8px;
+  transition:all .2s;
+}
+.rss-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-/* ─── EPISODE CARD ─── */
+/* ── EPISODE CARD ── */
 .ep-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  margin-bottom:12px;
-  overflow:hidden;
-  cursor:pointer;
-  position:relative;
-  opacity:0;transform:translateY(28px);
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease),opacity .01s;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:10px;overflow:hidden;
+  cursor:pointer;position:relative;
+  opacity:0;transform:translateY(24px);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease);
 }
-.ep-card.visible{
-  animation:cardReveal .55s var(--ease) forwards;
-}
-@keyframes cardReveal{
-  from{opacity:0;transform:translateY(28px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.ep-card:hover{
-  border-color:var(--border2);
-  box-shadow:0 12px 48px rgba(0,0,0,.35);
-  transform:translateY(-2px);
-}
-.ep-card.active{
-  border-color:var(--accent);
-  box-shadow:0 0 0 1px var(--accent),0 16px 60px rgba(0,0,0,.4);
-}
+.ep-card.visible{animation:cardIn .5s var(--ease) forwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.ep-card:hover{border-color:var(--border2);box-shadow:0 10px 40px rgba(0,0,0,.32);transform:translateY(-1px)}
+.ep-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 14px 50px rgba(0,0,0,.38)}
 
-/* Liquid hover effect */
 .ep-card::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 65%);
@@ -266,248 +208,254 @@ main{
 }
 .ep-card:hover::before{opacity:1}
 
-.ep-body{
-  display:flex;align-items:center;gap:14px;
-  padding:16px 18px;position:relative;z-index:1;
-}
+.ep-body{display:flex;align-items:center;gap:14px;padding:14px 16px;position:relative;z-index:1}
 
-/* Play button circle */
-.ep-play-ring{
-  position:relative;flex-shrink:0;width:52px;height:52px;
-}
-.ep-play-ring svg{
-  position:absolute;inset:0;transform:rotate(-90deg);
-}
-.ep-play-ring circle{fill:none;stroke:var(--border);stroke-width:1.5}
-.ep-play-ring .progress-ring{
-  stroke:var(--accent);stroke-width:2;
-  stroke-dasharray:150;stroke-dashoffset:150;
-  transition:stroke-dashoffset .3s;
-}
+/* Play button */
+.ep-play-wrap{flex-shrink:0;width:48px;height:48px;position:relative}
+.ep-play-wrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ep-play-wrap circle{fill:none;stroke:var(--border2);stroke-width:1.5}
+.prog-ring{stroke:var(--accent);stroke-width:2;stroke-dasharray:138;stroke-dashoffset:138;transition:stroke-dashoffset .2s linear}
 .ep-play-btn{
-  position:absolute;inset:6px;
-  border-radius:50%;border:none;
+  position:absolute;inset:5px;border-radius:50%;border:none;
   background:var(--card2);color:var(--text);
-  font-size:1.1rem;cursor:pointer;
+  font-size:1rem;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:all .25s;
+  transition:all .22s;
 }
-.ep-card.active .ep-play-btn{background:var(--accent);color:#000;box-shadow:0 4px 20px var(--glow)}
-.ep-play-btn:hover{transform:scale(1.1)}
+.ep-card.active .ep-play-btn{background:var(--accent);color:#000;box-shadow:0 4px 18px var(--glow)}
+.ep-play-btn:hover{transform:scale(1.08)}
 
 .ep-info{flex:1;min-width:0}
-.ep-num{
-  font-size:.65rem;font-weight:700;letter-spacing:.1em;
-  color:var(--accent);text-transform:uppercase;margin-bottom:3px;
-}
-.ep-title{
-  font-size:.9rem;font-weight:700;line-height:1.5;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  margin-bottom:5px;
-}
-.ep-meta-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.ep-tag{
-  font-size:.62rem;padding:2px 8px;border-radius:100px;
-  background:var(--card2);color:var(--muted2);border:1px solid var(--border);
-}
-.ep-dur{font-size:.7rem;color:var(--muted);margin-right:auto}
+.ep-num{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.ep-title{font-size:.88rem;font-weight:700;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.ep-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.ep-tag{font-size:.6rem;padding:2px 7px;border-radius:100px;background:var(--card2);color:var(--muted2);border:1px solid var(--border)}
+.ep-dur{font-size:.68rem;color:var(--muted);margin-right:auto}
 
 /* Waveform */
-.ep-wave{
-  display:flex;align-items:center;gap:2px;height:28px;flex-shrink:0;
-}
-.ep-wave .wb{
-  width:3px;border-radius:2px;background:var(--border2);
-  transition:background .3s;
-}
-.ep-card.active .ep-wave .wb{background:var(--accent);animation:waveAnim .8s ease-in-out infinite}
-.ep-wave .wb:nth-child(1){height:6px;animation-delay:.00s}
-.ep-wave .wb:nth-child(2){height:14px;animation-delay:.08s}
-.ep-wave .wb:nth-child(3){height:22px;animation-delay:.16s}
-.ep-wave .wb:nth-child(4){height:10px;animation-delay:.04s}
-.ep-wave .wb:nth-child(5){height:18px;animation-delay:.12s}
-.ep-wave .wb:nth-child(6){height:8px;animation-delay:.20s}
-.ep-wave .wb:nth-child(7){height:16px;animation-delay:.06s}
-@keyframes waveAnim{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.ep-wave{display:flex;align-items:center;gap:2px;height:26px;flex-shrink:0}
+.wb{width:3px;border-radius:2px;background:var(--border2);transition:background .3s}
+.ep-card.active .wb{background:var(--accent);animation:wv .75s ease-in-out infinite}
+.wb:nth-child(1){height:5px;animation-delay:.00s}
+.wb:nth-child(2){height:13px;animation-delay:.07s}
+.wb:nth-child(3){height:20px;animation-delay:.14s}
+.wb:nth-child(4){height:9px;animation-delay:.04s}
+.wb:nth-child(5){height:17px;animation-delay:.11s}
+.wb:nth-child(6){height:7px;animation-delay:.18s}
+.wb:nth-child(7){height:15px;animation-delay:.06s}
+@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
 
-/* ─── PLAYER PANEL ─── */
+/* ── PLAYER PANEL ── */
 .ep-player{
   overflow:hidden;max-height:0;
   transition:max-height .5s cubic-bezier(.4,0,.2,1);
-  background:var(--surface);
-  border-top:1px solid var(--border);
+  background:var(--surface);border-top:1px solid var(--border);
 }
-.ep-card.active .ep-player{max-height:200px}
+.ep-card.active .ep-player{max-height:320px}
+.player-inner{padding:14px 16px 16px;position:relative;z-index:1}
 
-.player-inner{padding:14px 18px 16px;position:relative;z-index:1}
-
-/* Custom mini player */
-.mini-player{
-  display:flex;flex-direction:column;gap:12px;
-}
-.mp-top{display:flex;align-items:center;gap:12px}
-.mp-artwork{
-  width:48px;height:48px;border-radius:10px;flex-shrink:0;
+/* Player layout */
+.pl-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pl-art{
+  width:46px;height:46px;border-radius:9px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.6rem;position:relative;overflow:hidden;
+  font-size:1.5rem;position:relative;overflow:hidden;
 }
-.mp-artwork::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
-}
-.mp-details{flex:1;min-width:0}
-.mp-title{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.mp-author{font-size:.7rem;color:var(--muted2)}
-.mp-time{font-size:.7rem;color:var(--muted);direction:ltr;font-variant-numeric:tabular-nums}
+.pl-art::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent)}
+.pl-info{flex:1;min-width:0}
+.pl-title{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.pl-author{font-size:.68rem;color:var(--muted2)}
 
-.mp-controls{display:flex;align-items:center;gap:12px}
-.mp-btn{
-  border:none;background:none;color:var(--muted2);
-  cursor:pointer;font-size:1.1rem;padding:6px;
-  border-radius:50%;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;
-}
-.mp-btn:hover{color:var(--text);background:var(--card2)}
-.mp-btn.main{
-  width:40px;height:40px;background:var(--accent);color:#000;
-  box-shadow:0 4px 16px var(--glow);
-}
-.mp-btn.main:hover{transform:scale(1.1);box-shadow:0 6px 24px var(--glow)}
-.mp-vol{font-size:.95rem}
-.mp-speed{
-  font-size:.68rem;font-weight:700;
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:6px;padding:3px 7px;color:var(--muted2);cursor:pointer;
-  transition:all .2s;white-space:nowrap;
-}
-.mp-speed:hover{border-color:var(--accent);color:var(--accent)}
-
-/* Progress */
-.mp-progress{display:flex;align-items:center;gap:8px}
-.prog-track{
+/* Progress bar */
+.pl-prog-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pl-time{font-size:.64rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:34px}
+.pl-track{
   flex:1;height:4px;background:var(--border2);border-radius:100px;
-  cursor:pointer;position:relative;
-  transition:height .2s;
+  cursor:pointer;position:relative;transition:height .18s;
 }
-.prog-track:hover{height:6px}
-.prog-fill{
+.pl-track:hover{height:7px}
+.pl-fill{
   height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
-  border-radius:100px;width:0%;transition:width .15s linear;
-  position:relative;
+  border-radius:100px;width:0%;transition:width .15s linear;position:relative;pointer-events:none;
 }
-.prog-fill::after{
-  content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);
-  width:12px;height:12px;border-radius:50%;background:var(--accent);
-  box-shadow:0 0 8px var(--glow);opacity:0;transition:opacity .2s;
+.pl-thumb{
+  position:absolute;right:-6px;top:50%;transform:translateY(-50%);
+  width:13px;height:13px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 10px var(--glow);opacity:0;transition:opacity .18s;pointer-events:none;
 }
-.prog-track:hover .prog-fill::after{opacity:1}
-.prog-time{font-size:.65rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pl-track:hover .pl-thumb{opacity:1}
 
-/* Spotify iframe as fallback */
-.spotify-embed{
-  width:100%;height:80px;border:none;border-radius:10px;
-  display:block;margin-top:4px;
+/* Controls row */
+.pl-controls{display:flex;align-items:center;justify-content:center;gap:10px}
+.pl-btn{
+  border:none;background:none;color:var(--muted2);
+  cursor:pointer;padding:7px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;font-size:.95rem;
 }
+.pl-btn:hover{color:var(--text);background:var(--card2)}
+.pl-btn svg{width:18px;height:18px;fill:currentColor}
+.pl-btn.main{
+  width:46px;height:46px;background:var(--accent);color:#000;
+  box-shadow:0 4px 18px var(--glow);font-size:1.2rem;
+}
+.pl-btn.main:hover{transform:scale(1.08);box-shadow:0 6px 26px var(--glow)}
 
-/* ─── EP ACTIONS ─── */
+/* Volume */
+.pl-vol-wrap{display:flex;align-items:center;gap:6px}
+.pl-vol-icon{font-size:.9rem;cursor:pointer;color:var(--muted2);transition:color .2s;border:none;background:none;padding:0}
+.pl-vol-icon:hover{color:var(--text)}
+.pl-vol-track{
+  width:62px;height:3px;background:var(--border2);border-radius:100px;
+  cursor:pointer;position:relative;
+}
+.pl-vol-fill{height:100%;background:var(--accent2);border-radius:100px;width:100%;pointer-events:none}
+
+/* Speed */
+.pl-speed{
+  font-size:.66rem;font-weight:700;
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:6px;padding:3px 8px;color:var(--muted2);
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+  font-family:inherit;
+}
+.pl-speed:hover,.pl-speed.on{border-color:var(--accent);color:var(--accent)}
+
+/* Bottom row */
+.pl-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+
+/* Actions */
 .ep-actions{
-  display:flex;gap:8px;padding:0 18px 14px;position:relative;z-index:1;
+  display:none;gap:7px;padding:0 16px 14px;position:relative;z-index:1;
 }
 .ep-card.active .ep-actions{display:flex}
 .ep-act{
-  flex:1;padding:8px 6px;border:1px solid var(--border);border-radius:var(--r2);
-  background:transparent;color:var(--muted2);font-family:inherit;font-size:.72rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
-  transition:all .25s;text-decoration:none;font-weight:600;
+  flex:1;padding:8px 5px;border:1px solid var(--border);border-radius:var(--r2);
+  background:transparent;color:var(--muted2);font-family:inherit;font-size:.7rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:all .22s;text-decoration:none;font-weight:600;
 }
 .ep-act:hover{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
-.ep-act.primary{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
+.ep-act.primary{border-color:rgba(245,197,24,.4);color:var(--accent);background:var(--glow2)}
 
-/* ─── SECTION LABEL ─── */
+/* ── SECTION LABEL ── */
 .section-lbl{
-  font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  font-size:.64rem;font-weight:700;letter-spacing:.14em;
   color:var(--muted);text-transform:uppercase;
-  margin-bottom:14px;padding-right:2px;
+  margin-bottom:12px;padding-right:2px;
   display:flex;align-items:center;gap:10px;
 }
 .section-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ─── EMPTY ─── */
-.empty{
-  text-align:center;padding:60px 20px;color:var(--muted);
-}
-.empty .e-icon{font-size:3.5rem;margin-bottom:14px;opacity:.5}
-.empty p{font-size:.9rem;line-height:1.7}
+/* ── EMPTY ── */
+.empty{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty .ei{font-size:3rem;margin-bottom:14px;opacity:.45}
+.empty p{font-size:.88rem;line-height:1.7}
 
-/* ─── SCROLL TOP ─── */
+/* ── GLOBAL STICKY PLAYER ── */
+.global-player{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:rgba(10,10,14,.94);
+  backdrop-filter:blur(30px) saturate(200%);
+  -webkit-backdrop-filter:blur(30px) saturate(200%);
+  border-top:1px solid var(--border);
+  transform:translateY(100%);
+  transition:transform .4s var(--ease);
+  padding:10px 16px 14px;
+}
+body.light .global-player{background:rgba(242,240,236,.95)}
+.global-player.show{transform:translateY(0)}
+.gp-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.gp-top{display:flex;align-items:center;gap:10px}
+.gp-art{
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;overflow:hidden;position:relative;
+}
+.gp-art::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent)}
+.gp-info{flex:1;min-width:0}
+.gp-title{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.gp-meta{font-size:.64rem;color:var(--muted2)}
+.gp-controls{display:flex;align-items:center;gap:6px}
+.gp-btn{
+  border:none;background:none;color:var(--muted2);cursor:pointer;
+  padding:6px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.88rem;transition:all .18s;
+}
+.gp-btn:hover{color:var(--text);background:var(--card2)}
+.gp-btn.main{
+  width:38px;height:38px;background:var(--accent);color:#000;
+  box-shadow:0 3px 14px var(--glow);border-radius:50%;font-size:1rem;
+}
+.gp-btn.main:hover{transform:scale(1.07)}
+.gp-prog-wrap{display:flex;align-items:center;gap:8px}
+.gp-time{font-size:.6rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:30px}
+.gp-track{flex:1;height:3px;background:var(--border2);border-radius:100px;cursor:pointer;position:relative}
+.gp-track:hover{height:5px;transition:height .15s}
+.gp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;width:0%;pointer-events:none;transition:width .15s linear}
+
+/* ── SCROLL TOP ── */
 #goTop{
-  position:fixed;bottom:22px;left:16px;
-  width:46px;height:46px;border-radius:50%;border:1px solid var(--border);
-  background:var(--card);color:var(--text);font-size:1.1rem;
+  position:fixed;bottom:72px;left:16px;
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--border2);
+  background:var(--card);color:var(--text);font-size:1rem;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 24px rgba(0,0,0,.3);z-index:300;
-  opacity:0;transform:translateY(12px) scale(.9);
-  transition:all .35s var(--ease);pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,.28);z-index:300;
+  opacity:0;transform:translateY(10px) scale(.9);
+  transition:all .3s var(--ease);pointer-events:none;
 }
 #goTop.show{opacity:1;transform:none;pointer-events:auto}
-#goTop:hover{background:var(--accent);color:#000;border-color:var(--accent);transform:translateY(-2px)}
+#goTop:hover{background:var(--accent);color:#000;border-color:var(--accent)}
 
-/* ─── TOAST ─── */
+/* ── TOAST ── */
 #toast{
-  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(12px);
   background:var(--card2);border:1px solid var(--border2);color:var(--text);
-  padding:10px 22px;border-radius:100px;font-size:.8rem;
-  opacity:0;transition:all .3s var(--ease);z-index:400;pointer-events:none;
-  white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.3);
+  padding:9px 20px;border-radius:100px;font-size:.78rem;
+  opacity:0;transition:all .28s var(--ease);z-index:400;pointer-events:none;
+  white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.3);
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
+/* ── FADE UP ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* ─── REDUCED MOTION ─── */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
-}
-
-/* ─── MOBILE ─── */
+/* ── MOBILE ── */
 @media(max-width:480px){
-  .hero h1{font-size:2rem}
-  .tabs{padding:3px}
-  .tab{min-width:78px;font-size:.72rem;padding:9px 10px}
+  .hero h1{font-size:1.9rem}
+  .tab{min-width:74px;font-size:.7rem;padding:8px 9px}
   .ep-act span{display:none}
+  .pl-vol-wrap{display:none}
 }
 
-/* ─── SCROLLBAR ─── */
+/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body class="dark">
 
-<!-- Aurora bg -->
 <div class="aurora" aria-hidden="true">
-  <div class="aurora-orb"></div>
-  <div class="aurora-orb"></div>
-  <div class="aurora-orb"></div>
+  <div class="ao"></div><div class="ao"></div><div class="ao"></div>
 </div>
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div class="topbar-logo">
+  <a class="topbar-logo" href="#" onclick="return false">
     <div class="logo-dot"></div>
-    رادیو بکت
-  </div>
+    <img class="logo-img" id="logoImg" src="" alt="رادیو بکت" style="display:none" onerror="this.style.display='none';document.getElementById('logoFb').style.display='block'"/>
+    <span class="logo-fallback" id="logoFb">رادیو بکت</span>
+  </a>
   <div class="topbar-right">
     <button class="tb-btn" id="themeBtn" onclick="toggleTheme()" title="حالت روشن/تاریک">🌙</button>
-    <a class="tb-btn" href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" title="تلگرام">📢</a>
-    <a class="tb-btn" href="https://www.instagram.com/behckettt/" target="_blank" title="اینستاگرام">📸</a>
-    <a class="tb-btn" href="https://linktr.ee/behckett" target="_blank" title="لینک‌تری">🔗</a>
+    <a class="tb-btn" href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" rel="noopener" title="تلگرام">📢</a>
+    <a class="tb-btn" href="https://www.instagram.com/behckettt/" target="_blank" rel="noopener" title="اینستاگرام">📸</a>
+    <a class="tb-btn" href="https://linktr.ee/behckett" target="_blank" rel="noopener" title="لینک‌تری">🔗</a>
   </div>
 </header>
 
@@ -519,190 +467,189 @@ main{
   </div>
   <h1>در جستجوی<br><em>معنای باخته</em></h1>
   <p class="hero-sub">خوانش صدای داستان‌های ماندگار</p>
-
-  <div class="search-container">
-    <span class="search-icon">🔍</span>
-    <input id="searchInput" type="search" placeholder="جستجو اپیزود، نویسنده، کتاب..." autocomplete="off" />
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input id="searchInput" type="search" placeholder="جستجو اپیزود، نویسنده، کتاب..." autocomplete="off"/>
   </div>
 </section>
 
 <!-- TABS -->
 <div class="tabs" id="tabs">
   <button class="tab active" data-show="all">
-    <span class="tab-icon">🎧</span> همه
+    <span>🎧</span> همه
     <span class="tab-badge" id="badge-all">12</span>
   </button>
   <button class="tab" data-show="borideh">
-    <span class="tab-icon">✂️</span> بریده
+    <span>✂️</span> بریده
     <span class="tab-badge">3</span>
   </button>
   <button class="tab" data-show="boofkoor">
-    <span class="tab-icon">🦉</span> بوف‌کور
+    <span>🦉</span> بوف‌کور
     <span class="tab-badge">3</span>
   </button>
   <button class="tab" data-show="vikomt">
-    <span class="tab-icon">⚔️</span> ویکنت
+    <span>⚔️</span> ویکنت
     <span class="tab-badge">3</span>
   </button>
   <button class="tab" data-show="tehran">
-    <span class="tab-icon">🏙️</span> تهران مخوف
+    <span>🏙️</span> تهران مخوف
     <span class="tab-badge">3</span>
   </button>
 </div>
 
-<!-- MAIN CONTENT -->
 <main id="mainContent"></main>
 
-<!-- SCROLL TOP -->
-<button id="goTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="بازگشت به بالا">↑</button>
+<!-- GLOBAL STICKY PLAYER -->
+<div class="global-player" id="globalPlayer">
+  <div class="gp-inner">
+    <div class="gp-top">
+      <div class="gp-art" id="gpArt">🎙️</div>
+      <div class="gp-info">
+        <div class="gp-title" id="gpTitle">—</div>
+        <div class="gp-meta" id="gpMeta">—</div>
+      </div>
+      <div class="gp-controls">
+        <button class="gp-btn" id="gpSkipBack" title="۱۵ ثانیه قبل" onclick="skipTime(-15)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7" y="16" font-size="6" fill="currentColor">15</text></svg>
+        </button>
+        <button class="gp-btn main" id="gpPlayBtn" onclick="toggleGlobalPlay()">▶</button>
+        <button class="gp-btn" id="gpSkipFwd" title="۱۵ ثانیه بعد" onclick="skipTime(15)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2z"/><text x="7" y="16" font-size="6" fill="currentColor">15</text></svg>
+        </button>
+      </div>
+    </div>
+    <div class="gp-prog-wrap">
+      <span class="gp-time" id="gpCurTime">۰:۰۰</span>
+      <div class="gp-track" id="gpTrack" onclick="seekGlobal(event)">
+        <div class="gp-fill" id="gpFill"></div>
+      </div>
+      <span class="gp-time" id="gpDurTime">—</span>
+    </div>
+  </div>
+</div>
 
-<!-- TOAST -->
+<button id="goTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="بالا">↑</button>
 <div id="toast"></div>
 
+<!-- HIDDEN AUDIO ELEMENT -->
+<audio id="mainAudio" preload="none"></audio>
+
 <script>
-// ═══════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════
+// ═══ DATA ═══
+// NOTE: episode numbers are sorted descending (newest first)
+// Episodes 43-45 are the LATEST in "بریده" series
 const SHOWS = {
   borideh:{
     id:'borideh',title:'بریده',icon:'✂️',
-    color:'#f5c518',colorDim:'rgba(245,197,24,.12)',
+    color:'#f5c518',colorDim:'rgba(245,197,24,.1)',
     desc:'داستان‌های کوتاه فارسی — فصل دوم',
     totalEps:45,
     rss:'https://anchor.fm/s/103cea30c/podcast/rss',
+    spotifyShow:'https://open.spotify.com/show/borideh',
+    // Episodes ordered newest first (43, 44, 45 are the latest)
     episodes:[
       {
-        n:45,spotifyId:'4k0TXZOquqmYNSR8Ec7CJV',
+        n:45,
         title:'وسواس | مسافری غریب و حیران',
         author:'بهرام صادقی',
         tags:['فصل دوم','داستان کوتاه'],
-        dur:'۲۸ دقیقه'
+        dur:'۲۸ دقیقه',
+        spotifyId:'4k0TXZOquqmYNSR8Ec7CJV',
+        audioSrc:null // Will be loaded from RSS
       },
       {
-        n:44,spotifyId:'2YdJ8kSrCgHx7A8PKgsFjl',
+        n:44,
         title:'انتری که لوطیش مرده بود',
         author:'صادق چوبک',
         tags:['فصل دوم','رئالیسم'],
-        dur:'۳۱ دقیقه'
+        dur:'۳۱ دقیقه',
+        spotifyId:'2YdJ8kSrCgHx7A8PKgsFjl',
+        audioSrc:null
       },
       {
-        n:43,spotifyId:'27F8LlezwWVnKICa8MvcHR',
+        n:43,
         title:'چشمهایش',
         author:'بزرگ علوی',
         tags:['فصل اول','عشق'],
-        dur:'۲۵ دقیقه'
+        dur:'۲۵ دقیقه',
+        spotifyId:'27F8LlezwWVnKICa8MvcHR',
+        audioSrc:null
       }
     ]
   },
   boofkoor:{
     id:'boofkoor',title:'بوف‌کور',icon:'🦉',
-    color:'#9b59b6',colorDim:'rgba(155,89,182,.12)',
+    color:'#9b59b6',colorDim:'rgba(155,89,182,.1)',
     desc:'خوانش کامل رمان هدایت',
     totalEps:null,
     rss:'https://anchor.fm/s/fdac4ec0/podcast/rss',
     episodes:[
-      {
-        n:1,spotifyId:'3uM3FwEOFWRECTPcuFhS1w',
-        title:'بوف‌کور — بخش اول',
-        author:'صادق هدایت',
-        tags:['هدایت','سوررئالیسم'],
-        dur:'۲۲ دقیقه'
-      },
-      {
-        n:2,spotifyId:'6MpAHWJTWBbLLcWVFCHniP',
-        title:'بوف‌کور — بخش دوم',
-        author:'صادق هدایت',
-        tags:['هدایت','کابوس'],
-        dur:'۱۹ دقیقه'
-      },
-      {
-        n:3,spotifyId:'5hLbHQLzMBHPFuRwVPtY2T',
-        title:'بوف‌کور — بخش سوم',
-        author:'صادق هدایت',
-        tags:['هدایت','مرگ'],
-        dur:'۲۴ دقیقه'
-      }
+      {n:3,title:'بوف‌کور — بخش سوم',author:'صادق هدایت',tags:['هدایت','مرگ'],dur:'۲۴ دقیقه',spotifyId:'5hLbHQLzMBHPFuRwVPtY2T',audioSrc:null},
+      {n:2,title:'بوف‌کور — بخش دوم',author:'صادق هدایت',tags:['هدایت','کابوس'],dur:'۱۹ دقیقه',spotifyId:'6MpAHWJTWBbLLcWVFCHniP',audioSrc:null},
+      {n:1,title:'بوف‌کور — بخش اول',author:'صادق هدایت',tags:['هدایت','سوررئالیسم'],dur:'۲۲ دقیقه',spotifyId:'3uM3FwEOFWRECTPcuFhS1w',audioSrc:null}
     ]
   },
   vikomt:{
     id:'vikomt',title:'ویکنت شقه‌شده',icon:'⚔️',
-    color:'#e74c3c',colorDim:'rgba(231,76,60,.12)',
+    color:'#e74c3c',colorDim:'rgba(231,76,60,.1)',
     desc:'ایتالو کالوینو — ترجمه فارسی',
     totalEps:null,
     rss:'https://anchor.fm/s/fd25dc64/podcast/rss',
     episodes:[
-      {
-        n:1,spotifyId:'7cRrmN0dCDfgJD6IbPheSa',
-        title:'ویکنت شقه‌شده — بخش اول',
-        author:'ایتالو کالوینو',
-        tags:['فانتزی','فلسفی'],
-        dur:'۲۰ دقیقه'
-      },
-      {
-        n:2,spotifyId:'4VfQiKSQb7l9cMjxFKkXJH',
-        title:'ویکنت شقه‌شده — بخش دوم',
-        author:'ایتالو کالوینو',
-        tags:['فانتزی','جنگ'],
-        dur:'۲۳ دقیقه'
-      },
-      {
-        n:3,spotifyId:'0sNbKL1qoHuiXC0t7zSEb4',
-        title:'ویکنت شقه‌شده — بخش سوم',
-        author:'ایتالو کالوینو',
-        tags:['فانتزی','دوگانگی'],
-        dur:'۲۶ دقیقه'
-      }
+      {n:3,title:'ویکنت شقه‌شده — بخش سوم',author:'ایتالو کالوینو',tags:['فانتزی','دوگانگی'],dur:'۲۶ دقیقه',spotifyId:'0sNbKL1qoHuiXC0t7zSEb4',audioSrc:null},
+      {n:2,title:'ویکنت شقه‌شده — بخش دوم',author:'ایتالو کالوینو',tags:['فانتزی','جنگ'],dur:'۲۳ دقیقه',spotifyId:'4VfQiKSQb7l9cMjxFKkXJH',audioSrc:null},
+      {n:1,title:'ویکنت شقه‌شده — بخش اول',author:'ایتالو کالوینو',tags:['فانتزی','فلسفی'],dur:'۲۰ دقیقه',spotifyId:'7cRrmN0dCDfgJD6IbPheSa',audioSrc:null}
     ]
   },
   tehran:{
     id:'tehran',title:'تهران مخوف',icon:'🏙️',
-    color:'#1abc9c',colorDim:'rgba(26,188,156,.12)',
+    color:'#1abc9c',colorDim:'rgba(26,188,156,.1)',
     desc:'مرتضی مشفق کاظمی',
     totalEps:null,
     rss:'https://anchor.fm/s/fe7eb98c/podcast/rss',
     episodes:[
-      {
-        n:1,spotifyId:'4aaGMKZmNRjzIMa4kZxoVb',
-        title:'تهران مخوف — بخش اول',
-        author:'مرتضی مشفق کاظمی',
-        tags:['رمان','تاریخی'],
-        dur:'۳۰ دقیقه'
-      },
-      {
-        n:2,spotifyId:'3GrAVo8gHBMFxLFCJF1LmK',
-        title:'تهران مخوف — بخش دوم',
-        author:'مرتضی مشفق کاظمی',
-        tags:['رمان','عشق'],
-        dur:'۲۸ دقیقه'
-      },
-      {
-        n:3,spotifyId:'6LzP0HkDmJOQgjgGKXjkbW',
-        title:'تهران مخوف — بخش سوم',
-        author:'مرتضی مشفق کاظمی',
-        tags:['رمان','ماجرا'],
-        dur:'۳۲ دقیقه'
-      }
+      {n:3,title:'تهران مخوف — بخش سوم',author:'مرتضی مشفق کاظمی',tags:['رمان','ماجرا'],dur:'۳۲ دقیقه',spotifyId:'6LzP0HkDmJOQgjgGKXjkbW',audioSrc:null},
+      {n:2,title:'تهران مخوف — بخش دوم',author:'مرتضی مشفق کاظمی',tags:['رمان','عشق'],dur:'۲۸ دقیقه',spotifyId:'3GrAVo8gHBMFxLFCJF1LmK',audioSrc:null},
+      {n:1,title:'تهران مخوف — بخش اول',author:'مرتضی مشفق کاظمی',tags:['رمان','تاریخی'],dur:'۳۰ دقیقه',spotifyId:'4aaGMKZmNRjzIMa4kZxoVb',audioSrc:null}
     ]
   }
 };
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
+// ═══ STATE ═══
 let activeShow = 'all';
-let activeEp = null; // 'showId:n'
+let activeKey = null; // 'showId:n'
 let searchQ = '';
+let isPlaying = false;
+let currentSpeed = 1;
+const speeds = [0.75, 1, 1.25, 1.5, 1.75, 2];
+let speedIdx = 1;
+let currentShowId = null;
+let currentEpN = null;
+let isMuted = false;
+let vol = 1;
 
-// ═══════════════════════════════════════════════
-// THEME
-// ═══════════════════════════════════════════════
+const audio = document.getElementById('mainAudio');
+
+// ═══ LOGO LOAD ═══
+(function loadLogo(){
+  // Try to load logo from Google Drive
+  const imgEl = document.getElementById('logoImg');
+  const fbEl = document.getElementById('logoFb');
+  // Google Drive direct download link
+  const driveId = '1QeMJOoddon0_aYunVj2k_7m_zD5W86Dd';
+  imgEl.src = `https://drive.google.com/uc?export=view&id=${driveId}`;
+  imgEl.style.display = 'block';
+  imgEl.onload = () => { fbEl.style.display = 'none'; };
+  imgEl.onerror = () => { imgEl.style.display = 'none'; fbEl.style.display = 'block'; };
+})();
+
+// ═══ THEME ═══
 function toggleTheme(){
   const isLight = document.body.classList.contains('light');
-  const mode = isLight ? 'dark' : 'light';
   document.body.classList.toggle('light', !isLight);
   document.body.classList.toggle('dark', isLight);
   document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('rb-theme', mode);
+  localStorage.setItem('rb-theme', isLight ? 'dark' : 'light');
 }
 (function(){
   const t = localStorage.getItem('rb-theme') || 'dark';
@@ -712,37 +659,285 @@ function toggleTheme(){
   }
 })();
 
-// ═══════════════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════════════
+// ═══ TABS ═══
 document.getElementById('tabs').addEventListener('click', e => {
   const tab = e.target.closest('.tab');
   if(!tab) return;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active');
   activeShow = tab.dataset.show;
-  activeEp = null;
   render();
 });
 
-// ═══════════════════════════════════════════════
-// SEARCH
-// ═══════════════════════════════════════════════
+// ═══ SEARCH ═══
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQ = e.target.value.trim();
   render();
 });
 
-// ═══════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════
+// ═══ AUDIO EVENTS ═══
+audio.addEventListener('timeupdate', onTimeUpdate);
+audio.addEventListener('ended', onEnded);
+audio.addEventListener('play', () => { isPlaying = true; syncPlayBtns(); });
+audio.addEventListener('pause', () => { isPlaying = false; syncPlayBtns(); });
+audio.addEventListener('error', onAudioError);
+audio.addEventListener('loadedmetadata', () => {
+  updateDuration();
+});
+
+function onTimeUpdate(){
+  if(!audio.duration) return;
+  const pct = audio.currentTime / audio.duration;
+  // Update global player
+  document.getElementById('gpFill').style.width = (pct*100)+'%';
+  document.getElementById('gpCurTime').textContent = fmtTime(audio.currentTime);
+  // Update inline player if open
+  if(activeKey){
+    const [sid,n] = activeKey.split(':');
+    const fillEl = document.getElementById(`fill-${sid}-${n}`);
+    const curEl = document.getElementById(`cur-${sid}-${n}`);
+    const ring = document.getElementById(`ring-${sid}-${n}`);
+    if(fillEl) fillEl.style.width = (pct*100)+'%';
+    if(curEl) curEl.textContent = fmtTime(audio.currentTime);
+    if(ring){ const c = 138; ring.style.strokeDashoffset = c - pct*c; }
+  }
+}
+
+function onEnded(){
+  isPlaying = false;
+  syncPlayBtns();
+  // Auto-play next episode
+  autoNext();
+}
+
+function onAudioError(){
+  // If direct audio fails, show Spotify fallback
+  toast('پخش مستقیم موجود نیست — Spotify باز می‌شود');
+  if(currentShowId && currentEpN){
+    const ep = getEp(currentShowId, currentEpN);
+    if(ep && ep.spotifyId){
+      window.open(`https://open.spotify.com/episode/${ep.spotifyId}`, '_blank');
+    }
+  }
+}
+
+function updateDuration(){
+  const d = audio.duration;
+  if(!d || isNaN(d)) return;
+  document.getElementById('gpDurTime').textContent = fmtTime(d);
+  if(activeKey){
+    const [sid,n] = activeKey.split(':');
+    const durEl = document.getElementById(`dur-${sid}-${n}`);
+    if(durEl) durEl.textContent = fmtTime(d);
+  }
+}
+
+function autoNext(){
+  if(!currentShowId || !currentEpN) return;
+  const show = SHOWS[currentShowId];
+  if(!show) return;
+  const idx = show.episodes.findIndex(e => e.n == currentEpN);
+  if(idx > 0){
+    const next = show.episodes[idx-1]; // descending order, so next newer = idx-1... actually auto-play older
+    const prev = show.episodes[idx+1];
+    if(prev){
+      playEp(currentShowId, prev.n);
+    }
+  }
+}
+
+// ═══ PLAY CONTROL ═══
+function playEp(showId, n){
+  const show = SHOWS[showId];
+  const ep = show.episodes.find(e => e.n == n);
+  if(!show || !ep) return;
+
+  currentShowId = showId;
+  currentEpN = n;
+  const key = `${showId}:${n}`;
+
+  // Deactivate previous
+  document.querySelectorAll('.ep-card').forEach(c => c.classList.remove('active'));
+  activeKey = key;
+
+  const card = document.getElementById(`card-${showId}-${n}`);
+  if(card){
+    card.classList.add('active');
+    setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
+  }
+
+  // Update global player UI
+  document.getElementById('gpArt').textContent = show.icon;
+  document.getElementById('gpArt').style.background = show.colorDim;
+  document.getElementById('gpTitle').textContent = ep.title;
+  document.getElementById('gpMeta').textContent = `${ep.author} — ${show.title}`;
+  document.getElementById('gpFill').style.width = '0%';
+  document.getElementById('gpCurTime').textContent = '۰:۰۰';
+  document.getElementById('gpDurTime').textContent = '—';
+  document.getElementById('globalPlayer').classList.add('show');
+
+  // Determine audio source
+  let src = ep.audioSrc;
+  if(!src){
+    // Try RSS-loaded sources first, then Spotify embed fallback
+    const rssKey = `${showId}:${n}:audio`;
+    src = sessionStorage.getItem(rssKey) || null;
+  }
+
+  if(src){
+    audio.src = src;
+    audio.load();
+    audio.play().catch(()=>{});
+  } else {
+    // No direct audio - show Spotify embed in the card
+    showSpotifyFallback(showId, n, ep.spotifyId);
+    toast('در حال بارگذاری از RSS...');
+    // Try loading RSS
+    loadRSSForShow(showId).then(() => {
+      const rssKey = `${showId}:${n}:audio`;
+      const rssSrc = sessionStorage.getItem(rssKey);
+      if(rssSrc){
+        ep.audioSrc = rssSrc;
+        audio.src = rssSrc;
+        audio.load();
+        audio.play().catch(()=>{});
+        hideSpotifyFallback(showId, n);
+      }
+    });
+  }
+}
+
+function showSpotifyFallback(showId, n, spotifyId){
+  const fbEl = document.getElementById(`spotify-fb-${showId}-${n}`);
+  if(fbEl){
+    fbEl.style.display = 'block';
+    fbEl.src = `https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator&theme=0`;
+  }
+}
+
+function hideSpotifyFallback(showId, n){
+  const fbEl = document.getElementById(`spotify-fb-${showId}-${n}`);
+  if(fbEl) fbEl.style.display = 'none';
+}
+
+function toggleCard(showId, n){
+  const key = `${showId}:${n}`;
+  if(activeKey === key){
+    // Toggle play/pause
+    if(isPlaying){ audio.pause(); }
+    else { audio.play().catch(()=>{}); }
+  } else {
+    if(isPlaying || activeKey){ audio.pause(); }
+    playEp(showId, n);
+  }
+}
+
+function toggleGlobalPlay(){
+  if(!currentShowId) return;
+  if(isPlaying){ audio.pause(); }
+  else { audio.play().catch(()=>{}); }
+}
+
+function syncPlayBtns(){
+  // Global player
+  document.getElementById('gpPlayBtn').textContent = isPlaying ? '⏸' : '▶';
+  // Inline
+  if(activeKey){
+    const [sid,n] = activeKey.split(':');
+    const btn = document.getElementById(`pbtn-${sid}-${n}`);
+    if(btn) btn.textContent = isPlaying ? '⏸' : '▶';
+  }
+}
+
+function skipTime(sec){
+  audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime + sec));
+}
+
+// ═══ SEEK ═══
+function seekTrack(e, showId, n){
+  e.stopPropagation();
+  const track = document.getElementById(`track-${showId}-${n}`);
+  if(!track || !audio.duration) return;
+  const rect = track.getBoundingClientRect();
+  // RTL: right side = start
+  const pct = 1 - (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+function seekGlobal(e){
+  const track = document.getElementById('gpTrack');
+  if(!track || !audio.duration) return;
+  const rect = track.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+// ═══ VOLUME ═══
+function setVol(e, showId, n){
+  e.stopPropagation();
+  const track = document.getElementById(`vtrak-${showId}-${n}`);
+  if(!track) return;
+  const rect = track.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  vol = Math.max(0, Math.min(1, pct));
+  audio.volume = vol;
+  isMuted = vol === 0;
+  updateVolUI(showId, n);
+}
+
+function toggleMute(showId, n){
+  isMuted = !isMuted;
+  audio.muted = isMuted;
+  updateVolUI(showId, n);
+}
+
+function updateVolUI(showId, n){
+  const fill = document.getElementById(`vfill-${showId}-${n}`);
+  const icon = document.getElementById(`vico-${showId}-${n}`);
+  if(fill) fill.style.width = (isMuted ? 0 : vol*100)+'%';
+  if(icon) icon.textContent = isMuted || vol===0 ? '🔇' : vol<0.5 ? '🔉' : '🔊';
+}
+
+// ═══ SPEED ═══
+function cycleSpeed(showId, n){
+  speedIdx = (speedIdx + 1) % speeds.length;
+  currentSpeed = speeds[speedIdx];
+  audio.playbackRate = currentSpeed;
+  const btn = document.getElementById(`spd-${showId}-${n}`);
+  if(btn) btn.textContent = currentSpeed + 'x';
+}
+
+// ═══ SLEEP TIMER ═══
+let sleepTimer = null;
+function setSleep(showId, n){
+  const options = ['۱۵ دقیقه','۳۰ دقیقه','۴۵ دقیقه','۱ ساعت','لغو'];
+  const mins = [15,30,45,60,0];
+  // Simple cycle
+  const btn = document.getElementById(`sleep-${showId}-${n}`);
+  if(!btn) return;
+  const cur = btn.dataset.step ? parseInt(btn.dataset.step) : 0;
+  const next = (cur + 1) % options.length;
+  btn.dataset.step = next;
+  btn.textContent = '⏱ '+options[next];
+  if(sleepTimer){ clearTimeout(sleepTimer); sleepTimer = null; }
+  if(mins[next] > 0){
+    sleepTimer = setTimeout(()=>{ audio.pause(); toast('تایمر خواب: پخش متوقف شد'); }, mins[next]*60*1000);
+    toast(`تایمر: ${options[next]}`);
+  } else {
+    toast('تایمر لغو شد');
+    btn.textContent = '⏱ تایمر';
+    btn.dataset.step = '';
+  }
+}
+
+// ═══ RENDER ═══
 function getFiltered(){
   const shows = activeShow === 'all' ? Object.values(SHOWS) : [SHOWS[activeShow]].filter(Boolean);
   if(!searchQ) return shows;
   return shows.map(show => ({
     ...show,
     episodes: show.episodes.filter(ep =>
-      ep.title.includes(searchQ) || ep.author.includes(searchQ) || ep.tags.some(t => t.includes(searchQ))
+      ep.title.includes(searchQ) || ep.author.includes(searchQ) || ep.tags.some(t=>t.includes(searchQ)) || String(ep.n).includes(searchQ)
     )
   })).filter(s => s.episodes.length > 0);
 }
@@ -750,257 +945,282 @@ function getFiltered(){
 function render(){
   const filtered = getFiltered();
   const main = document.getElementById('mainContent');
-
-  if(!filtered.length || filtered.every(s => s.episodes.length === 0)){
-    main.innerHTML = `<div class="empty"><div class="e-icon">🔍</div><p>اپیزودی پیدا نشد<br><small>با کلمه دیگری جستجو کنید</small></p></div>`;
+  if(!filtered.length || filtered.every(s=>s.episodes.length===0)){
+    main.innerHTML = `<div class="empty"><div class="ei">🔍</div><p>اپیزودی پیدا نشد<br><small>با کلمه دیگری جستجو کنید</small></p></div>`;
     return;
   }
-
-  main.innerHTML = filtered.map((show, si) => `
+  main.innerHTML = filtered.map((show,si)=>`
     <div class="show-block" id="show-${show.id}">
-      ${renderShowHeader(show, si)}
-      <div class="section-lbl">اپیزودها</div>
-      ${show.episodes.map((ep, ei) => renderCard(show, ep, si, ei)).join('')}
+      ${renderShowHeader(show,si)}
+      <div class="section-lbl">اپیزودها — جدیدترین اول</div>
+      ${show.episodes.map((ep,ei)=>renderCard(show,ep,si,ei)).join('')}
     </div>
   `).join('');
 
-  // Intersection observer for scroll animations
-  requestAnimationFrame(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+  // Intersection observer
+  requestAnimationFrame(()=>{
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
       });
-    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
-
-    document.querySelectorAll('.ep-card, .show-header').forEach(el => observer.observe(el));
+    },{threshold:.05,rootMargin:'0px 0px -24px 0px'});
+    document.querySelectorAll('.ep-card,.show-header').forEach(el=>obs.observe(el));
   });
 
-  // Liquid mouse effect
-  document.querySelectorAll('.ep-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100) + '%');
-      card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100) + '%');
+  // Liquid hover
+  document.querySelectorAll('.ep-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
     });
   });
 
   // Restore active state
-  if(activeEp){
-    const [sid, n] = activeEp.split(':');
+  if(activeKey){
+    const [sid,n] = activeKey.split(':');
     const card = document.getElementById(`card-${sid}-${n}`);
     if(card) card.classList.add('active');
   }
 }
 
-function renderShowHeader(show, si){
+function renderShowHeader(show,si){
   return `
-    <div class="show-header" style="animation-delay:${si*0.1}s">
-      <div class="show-cover" style="background:${show.colorDim};border:1px solid ${show.color}22">
-        ${show.icon}
-      </div>
+    <div class="show-header" style="animation-delay:${si*.1}s">
+      <div class="show-cover" style="background:${show.colorDim};border:1px solid ${show.color}28">${show.icon}</div>
       <div class="show-info">
         <div class="show-name" style="color:${show.color}">${show.title}</div>
         <div class="show-desc">${show.desc}</div>
         <div class="show-stats">
-          <div class="show-stat"><strong>${show.totalEps ? show.totalEps+'+ ' : ''}اپیزود</strong></div>
-          <div class="show-stat">•</div>
-          <div class="show-stat"><a href="${show.rss}" target="_blank" style="color:${show.color};text-decoration:none;font-size:.65rem">🔔 RSS</a></div>
+          ${show.totalEps ? `<div class="show-stat"><strong>${show.totalEps}</strong> اپیزود</div><div class="show-stat">•</div>` : ''}
+          <a class="rss-btn" href="${show.rss}" target="_blank" rel="noopener">🔔 RSS</a>
         </div>
       </div>
     </div>
   `;
 }
 
-function renderCard(show, ep, si, ei){
+function renderCard(show,ep,si,ei){
   const key = `${show.id}:${ep.n}`;
-  const isActive = activeEp === key;
+  const isActive = activeKey === key;
+  const isPlaying_ = isActive && isPlaying;
   return `
-    <div class="ep-card ${isActive ? 'active' : ''}"
+    <div class="ep-card ${isActive?'active':''}"
          id="card-${show.id}-${ep.n}"
-         style="animation-delay:${si*0.12 + ei*0.08}s"
-         onclick="toggleCard('${show.id}','${ep.n}','${show.color}','${show.icon}')">
+         style="animation-delay:${si*.1+ei*.07}s"
+         onclick="toggleCard('${show.id}','${ep.n}')">
 
       <div class="ep-body">
-        <!-- Play ring -->
-        <div class="ep-play-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle cx="26" cy="26" r="22"/>
-            <circle class="progress-ring" cx="26" cy="26" r="22"/>
+        <div class="ep-play-wrap">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="22"/>
+            <circle class="prog-ring" id="ring-${show.id}-${ep.n}" cx="24" cy="24" r="22"/>
           </svg>
-          <button class="ep-play-btn" onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}','${show.color}','${show.icon}')">
-            ${isActive ? '⏸' : '▶'}
+          <button class="ep-play-btn" id="pbtn-${show.id}-${ep.n}"
+                  onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}')">
+            ${isPlaying_ ? '⏸' : '▶'}
           </button>
         </div>
-
         <div class="ep-info">
           <div class="ep-num" style="color:${show.color}">${show.title} — اپیزود ${toFa(ep.n)}</div>
           <div class="ep-title">${ep.title}</div>
-          <div class="ep-meta-row">
-            ${ep.tags.map(t => `<span class="ep-tag">${t}</span>`).join('')}
+          <div class="ep-meta">
+            ${ep.tags.map(t=>`<span class="ep-tag">${t}</span>`).join('')}
             <span class="ep-dur">${ep.dur}</span>
           </div>
         </div>
-
-        <!-- Waveform -->
-        <div class="ep-wave">
-          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-          <div class="wb"></div>
-        </div>
+        <div class="ep-wave">${'<div class="wb"></div>'.repeat(7)}</div>
       </div>
 
-      <!-- Player panel -->
+      <!-- INLINE PLAYER -->
       <div class="ep-player">
         <div class="player-inner">
-          <div class="mini-player">
-            <div class="mp-top">
-              <div class="mp-artwork" style="background:${show.colorDim};border:1px solid ${show.color}33">${show.icon}</div>
-              <div class="mp-details">
-                <div class="mp-title">${ep.title}</div>
-                <div class="mp-author">${ep.author} — ${show.title}</div>
+          <!-- Top row -->
+          <div class="pl-top">
+            <div class="pl-art" style="background:${show.colorDim};border:1px solid ${show.color}30">${show.icon}</div>
+            <div class="pl-info">
+              <div class="pl-title">${ep.title}</div>
+              <div class="pl-author">${ep.author}</div>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div class="pl-prog-wrap">
+            <span class="pl-time" id="cur-${show.id}-${ep.n}">۰:۰۰</span>
+            <div class="pl-track" id="track-${show.id}-${ep.n}"
+                 onclick="seekTrack(event,'${show.id}','${ep.n}')">
+              <div class="pl-fill" id="fill-${show.id}-${ep.n}">
+                <div class="pl-thumb"></div>
               </div>
             </div>
-            <!-- Spotify embed (handles actual audio) -->
-            <iframe
-              class="spotify-embed"
-              src="https://open.spotify.com/embed/episode/${ep.spotifyId}?utm_source=generator&theme=0"
-              frameborder="0" allowfullscreen
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy">
-            </iframe>
+            <span class="pl-time" id="dur-${show.id}-${ep.n}">--:--</span>
           </div>
+
+          <!-- Controls -->
+          <div class="pl-controls">
+            <button class="pl-btn" onclick="event.stopPropagation();skipTime(-15)" title="۱۵ ثانیه قبل">⏮ ۱۵</button>
+            <button class="pl-btn" onclick="event.stopPropagation();skipTime(-5)" title="۵ ثانیه قبل">↩ ۵</button>
+            <button class="pl-btn main" id="pbtn2-${show.id}-${ep.n}"
+                    onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}')">
+              ${isPlaying_ ? '⏸' : '▶'}
+            </button>
+            <button class="pl-btn" onclick="event.stopPropagation();skipTime(5)" title="۵ ثانیه بعد">↪ ۵</button>
+            <button class="pl-btn" onclick="event.stopPropagation();skipTime(15)" title="۱۵ ثانیه بعد">⏭ ۱۵</button>
+          </div>
+
+          <!-- Bottom: volume + speed + sleep -->
+          <div class="pl-bottom">
+            <div class="pl-vol-wrap" onclick="event.stopPropagation()">
+              <button class="pl-vol-icon" id="vico-${show.id}-${ep.n}" onclick="toggleMute('${show.id}','${ep.n}')">🔊</button>
+              <div class="pl-vol-track" id="vtrak-${show.id}-${ep.n}"
+                   onclick="setVol(event,'${show.id}','${ep.n}')">
+                <div class="pl-vol-fill" id="vfill-${show.id}-${ep.n}"></div>
+              </div>
+            </div>
+            <button class="pl-speed" id="spd-${show.id}-${ep.n}"
+                    onclick="event.stopPropagation();cycleSpeed('${show.id}','${ep.n}')">
+              ${currentSpeed}x
+            </button>
+            <button class="pl-speed" id="sleep-${show.id}-${ep.n}"
+                    onclick="event.stopPropagation();setSleep('${show.id}','${ep.n}')">
+              ⏱ تایمر
+            </button>
+          </div>
+
+          <!-- Spotify fallback iframe (hidden by default) -->
+          <iframe id="spotify-fb-${show.id}-${ep.n}"
+            style="display:none;width:100%;height:80px;border:none;border-radius:10px;margin-top:8px"
+            frameborder="0" allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
         </div>
       </div>
 
-      <!-- Actions -->
+      <!-- ACTIONS -->
       <div class="ep-actions" onclick="event.stopPropagation()">
-        <a class="ep-act primary" href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank">
+        <a class="ep-act primary" href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank" rel="noopener">
           🎵 <span>Spotify</span>
         </a>
-        <button class="ep-act" onclick="shareEp('${ep.spotifyId}','${ep.title}')">
-          🔗 <span>اشتراک</span>
-        </button>
-        <button class="ep-act" onclick="copyLnk('${ep.spotifyId}')">
-          📋 <span>کپی</span>
-        </button>
+        <button class="ep-act" onclick="shareEp('${ep.spotifyId}','${ep.title}')">🔗 <span>اشتراک</span></button>
+        <button class="ep-act" onclick="copyLnk('${ep.spotifyId}')">📋 <span>کپی</span></button>
       </div>
     </div>
   `;
 }
 
-// ═══════════════════════════════════════════════
-// TOGGLE CARD
-// ═══════════════════════════════════════════════
-function toggleCard(showId, n, color, icon){
-  const key = `${showId}:${n}`;
-  const wasActive = activeEp === key;
-
-  // Deactivate all
-  document.querySelectorAll('.ep-card').forEach(c => {
-    c.classList.remove('active');
-    const btn = c.querySelector('.ep-play-btn');
-    if(btn) btn.textContent = '▶';
-  });
-
-  if(!wasActive){
-    activeEp = key;
-    const card = document.getElementById(`card-${showId}-${n}`);
-    if(card){
-      card.classList.add('active');
-      const btn = card.querySelector('.ep-play-btn');
-      if(btn) btn.textContent = '⏸';
-      // Smooth scroll to card
-      setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+// ═══ RSS LOADER ═══
+const rssLoaded = {};
+async function loadRSSForShow(showId){
+  if(rssLoaded[showId]) return;
+  const show = SHOWS[showId];
+  if(!show) return;
+  try{
+    // Use a CORS proxy for RSS
+    const proxies = [
+      `https://corsproxy.io/?${encodeURIComponent(show.rss)}`,
+      `https://api.allorigins.win/get?url=${encodeURIComponent(show.rss)}`
+    ];
+    let text = null;
+    for(const proxy of proxies){
+      try{
+        const res = await fetch(proxy, {signal: AbortSignal.timeout(8000)});
+        if(!res.ok) continue;
+        const data = await res.json().catch(async()=>({contents: await res.text()}));
+        text = data.contents || data;
+        if(typeof text === 'string' && text.includes('<enclosure')) break;
+      }catch(e){ continue; }
     }
-  } else {
-    activeEp = null;
-  }
+    if(!text) return;
+    const xml = new DOMParser().parseFromString(text,'text/xml');
+    const items = [...xml.querySelectorAll('item')];
+    // Map items to episodes (reverse order = oldest first in RSS typically)
+    items.forEach((item, idx)=>{
+      const enclosure = item.querySelector('enclosure');
+      const audioUrl = enclosure?.getAttribute('url');
+      if(!audioUrl) return;
+      // Try to match by position
+      const ep = show.episodes[idx] || show.episodes[show.episodes.length - 1 - idx];
+      if(ep){
+        ep.audioSrc = audioUrl;
+        sessionStorage.setItem(`${showId}:${ep.n}:audio`, audioUrl);
+      }
+    });
+    rssLoaded[showId] = true;
+    // Update durations
+    if(show.totalEps === null && items.length > 0){
+      show.totalEps = items.length;
+    }
+  }catch(e){ /* silent */ }
 }
 
-// ═══════════════════════════════════════════════
-// SHARE / COPY
-// ═══════════════════════════════════════════════
+// ═══ SHARE / COPY ═══
 function shareEp(id, title){
   const url = `https://open.spotify.com/episode/${id}`;
   if(navigator.share){
     navigator.share({title:'رادیو بکت | '+title, url}).catch(()=>{});
   } else {
-    doCopy(url);
-    toast('لینک کپی شد ✓');
+    doCopy(url); toast('لینک کپی شد ✓');
   }
 }
 function copyLnk(id){
   doCopy(`https://open.spotify.com/episode/${id}`);
   toast('لینک کپی شد ✓');
 }
-function doCopy(text){
-  if(navigator.clipboard){ navigator.clipboard.writeText(text).catch(()=>fbCopy(text)); }
-  else fbCopy(text);
+function doCopy(t){
+  navigator.clipboard?.writeText(t).catch(()=>fbCopy(t))||fbCopy(t);
 }
-function fbCopy(text){
+function fbCopy(t){
   const el=document.createElement('textarea');
-  el.value=text;el.style.cssText='position:fixed;opacity:0';
+  el.value=t;el.style.cssText='position:fixed;opacity:0';
   document.body.appendChild(el);el.select();
   document.execCommand('copy');document.body.removeChild(el);
 }
 
-// ═══════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════
-let toastTimer;
+// ═══ TOAST ═══
+let toastT;
 function toast(msg){
   const t=document.getElementById('toast');
-  clearTimeout(toastTimer);
+  clearTimeout(toastT);
   t.textContent=msg;t.classList.add('show');
-  toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+  toastT=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ═══════════════════════════════════════════════
-// SCROLL TOP
-// ═══════════════════════════════════════════════
-const goTopBtn = document.getElementById('goTop');
+// ═══ UTILS ═══
+function toFa(n){return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}
+function fmtTime(s){
+  if(!s||isNaN(s)) return '۰:۰۰';
+  const m=Math.floor(s/60);const sec=Math.floor(s%60);
+  return toFa(m)+':'+toFa(String(sec).padStart(2,'0'));
+}
+function getEp(showId, n){
+  return SHOWS[showId]?.episodes.find(e=>e.n==n);
+}
+
+// ═══ SCROLL TOP ═══
+const goTopBtn=document.getElementById('goTop');
 window.addEventListener('scroll',()=>{
-  goTopBtn.classList.toggle('show', window.scrollY > 280);
+  goTopBtn.classList.toggle('show',window.scrollY>260);
 },{passive:true});
 
-// ═══════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════
-function toFa(n){
-  return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
-}
+// ═══ KEYBOARD SHORTCUTS ═══
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT') return;
+  if(e.key === ' '){ e.preventDefault(); toggleGlobalPlay(); }
+  if(e.key === 'ArrowLeft') skipTime(10);
+  if(e.key === 'ArrowRight') skipTime(-10);
+  if(e.key === 'ArrowUp'){ audio.volume = Math.min(1, audio.volume+0.1); }
+  if(e.key === 'ArrowDown'){ audio.volume = Math.max(0, audio.volume-0.1); }
+  if(e.key === 'm' || e.key === 'M'){ audio.muted = !audio.muted; }
+});
 
-// ═══════════════════════════════════════════════
-// RSS LOADER (async enrichment)
-// ═══════════════════════════════════════════════
-async function tryLoadRSS(showId, url){
-  try{
-    const res = await fetch(url);
-    if(!res.ok) return;
-    const text = await res.text();
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
-    const items = [...xml.querySelectorAll('item')];
-    // Update durations and titles from feed
-    const show = SHOWS[showId];
-    if(!show || !items.length) return;
-    // Just update totalEps count
-    show.totalEps = items.length;
-    // Re-render if active
-    if(activeShow === 'all' || activeShow === showId) render();
-  }catch(e){ /* silent */ }
-}
-
-// ═══════════════════════════════════════════════
-// BOOT
-// ═══════════════════════════════════════════════
+// ═══ BOOT ═══
 render();
 
-// Async RSS enrichment
-Object.values(SHOWS).forEach(s => tryLoadRSS(s.id, s.rss));
-
+// Preload RSS feeds in background
+setTimeout(()=>{
+  Object.keys(SHOWS).forEach(id => loadRSSForShow(id));
+}, 1500);
 </script>
 </body>
 </html>
