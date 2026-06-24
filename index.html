@@ -1,24 +1,1006 @@
-بذار اول همه RSS فیدها رو بخونم تا اطلاعات دقیق اپیزودها رو داشته باشم:شبکه بسته‌ست. اما اطلاعات اپیزودها رو از همون Spotify embed IDs که داری می‌سازم — چون RSS از Anchor/Spotify هم URL pattern یکسانی دارن. بذار مستقیم با URLهای Spotify که داری کار کنم و یک مینی‌اپ فوق‌العاده بسازم:حالا بذار مینی‌اپ اصلی رو بسازم — کامل، خفن، با همه افکت‌ها:مینی‌اپ آماده‌ست! اینا چیزایی که داخلشه:
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>رادیو بکت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --surface:#111;
+  --card:#161616;
+  --card2:#1e1e1e;
+  --border:#252525;
+  --border2:#333;
+  --text:#f0f0f0;
+  --muted:#666;
+  --muted2:#888;
+  --accent:#f5c518;
+  --accent2:#ffd84d;
+  --glow:rgba(245,197,24,0.18);
+  --glow2:rgba(245,197,24,0.08);
+  --r:18px;
+  --r2:12px;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+body.light{
+  --bg:#f0ede8;
+  --surface:#e8e5e0;
+  --card:#fff;
+  --card2:#f5f3ef;
+  --border:#ddd;
+  --border2:#ccc;
+  --text:#111;
+  --muted:#999;
+  --muted2:#777;
+  --accent:#c49a00;
+  --accent2:#f5c518;
+  --glow:rgba(196,154,0,0.15);
+  --glow2:rgba(196,154,0,0.06);
+}
 
-**ویژگی‌های بصری:**
-- **Aurora background** — سه orb رنگی که نفس می‌کشن و drift می‌کنن
-- **Shimmer text** — متن «معنای باخته» با گرادیانت متحرک طلایی
-- **Liquid hover** — وقتی موس روی کارت میره، glow از دقیقاً همون نقطه‌ای که ماوس هست می‌تابه
-- **Scroll reveal** — کارت‌ها با IntersectionObserver یکی‌یکی fade+slide می‌کنن
-- **Animated waveform** — هر اپیزود فعال، موج صوتی متحرک نشون می‌ده
+html{scroll-behavior:smooth}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .4s var(--ease),color .4s var(--ease);
+  -webkit-font-smoothing:antialiased;
+}
 
-**پلیر و تجربه صوتی:**
-- پنل کشویی با `max-height` transition روان — باز/بسته بدون جهش
-- Spotify embed داخل کارت — نه popup، نه redirect
-- دکمه ▶/⏸ که state رو نشون می‌ده
-- Progress ring SVG دور دکمه play
+/* ─── AURORA BACKGROUND ─── */
+.aurora{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.aurora-orb{
+  position:absolute;border-radius:50%;filter:blur(120px);opacity:.12;
+  animation:drift 12s ease-in-out infinite;
+}
+.aurora-orb:nth-child(1){width:600px;height:400px;top:-100px;right:-150px;background:var(--accent);animation-delay:0s}
+.aurora-orb:nth-child(2){width:400px;height:500px;bottom:-100px;left:-100px;background:#9b59b6;animation-delay:-4s}
+.aurora-orb:nth-child(3){width:300px;height:300px;top:40%;left:40%;background:#1abc9c;animation-delay:-8s}
+@keyframes drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-20px) scale(1.1)}
+  66%{transform:translate(-20px,15px) scale(0.95)}
+}
+body.light .aurora-orb{opacity:.06}
 
-**ساختار و امکانات:**
-- ۴ نمایش در تب‌های فیلتر: بریده / بوف‌کور / ویکنت / تهران مخوف
-- جستجوی real-time روی عنوان + نویسنده + تگ‌ها
-- Share با Web Share API (موبایل) یا کپی خودکار
-- RSS loader آسنکرون برای آپدیت خودکار
-- تم روشن/تاریک با ذخیره در localStorage
-- Sticky header با glassmorphism
+/* ─── TOPBAR ─── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;height:56px;
+  background:rgba(8,8,8,.8);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  transition:background .4s;
+}
+body.light .topbar{background:rgba(240,237,232,.85)}
+.topbar-logo{
+  font-size:1rem;font-weight:900;color:var(--accent);
+  display:flex;align-items:center;gap:8px;letter-spacing:-.3px;
+}
+.topbar-logo .logo-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--accent);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow)}50%{opacity:.5;box-shadow:0 0 0 6px transparent}}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.tb-btn{
+  width:36px;height:36px;border:none;border-radius:50%;
+  background:var(--card2);color:var(--text);
+  cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s;border:1px solid var(--border);
+  text-decoration:none;
+}
+.tb-btn:hover{background:var(--border2);transform:scale(1.1);border-color:var(--accent)}
 
-**نکته:** چون RSS از Spotify/Anchor در محیط Telegram WebApp ممکنه CORS داشته باشه، Spotify ID های واقعی اپیزودها رو باید از داشبورد Anchor خودت کپی و جایگزین کنی.
+/* ─── HERO ─── */
+.hero{
+  position:relative;z-index:1;
+  text-align:center;padding:52px 20px 36px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--glow2);border:1px solid rgba(245,197,24,.3);
+  color:var(--accent);font-size:.72rem;font-weight:700;
+  padding:5px 14px;border-radius:100px;letter-spacing:.08em;
+  margin-bottom:20px;
+  animation:fadeUp .6s var(--ease) both;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#ff4444;animation:blink 1.5s infinite}
+.hero h1{
+  font-size:clamp(2.2rem,9vw,4rem);
+  font-weight:900;line-height:1.1;letter-spacing:-.02em;
+  margin-bottom:10px;
+  animation:fadeUp .65s .1s var(--ease) both;
+}
+.hero h1 em{
+  font-style:normal;color:transparent;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),#ff9f43);
+  -webkit-background-clip:text;background-clip:text;
+  background-size:200% auto;
+  animation:shimmerText 3s linear infinite;
+}
+@keyframes shimmerText{0%{background-position:0%}100%{background-position:200%}}
+.hero-sub{
+  font-size:.95rem;color:var(--muted2);font-weight:300;
+  margin-bottom:32px;
+  animation:fadeUp .65s .18s var(--ease) both;
+}
+
+/* ─── SEARCH ─── */
+.search-container{
+  position:relative;max-width:540px;margin:0 auto 24px;
+  animation:fadeUp .65s .25s var(--ease) both;
+}
+.search-icon{
+  position:absolute;top:50%;right:18px;transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;font-size:1rem;
+}
+#searchInput{
+  width:100%;padding:14px 50px 14px 20px;
+  border:1.5px solid var(--border2);border-radius:100px;
+  background:var(--card);color:var(--text);
+  font-family:inherit;font-size:.92rem;outline:none;
+  transition:all .3s var(--ease);
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+}
+#searchInput:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--glow),0 4px 20px rgba(0,0,0,.2);
+}
+#searchInput::placeholder{color:var(--muted)}
+
+/* ─── SHOW TABS ─── */
+.tabs{
+  display:flex;gap:0;
+  max-width:700px;margin:0 auto 40px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:4px;
+  overflow-x:auto;
+  animation:fadeUp .65s .3s var(--ease) both;
+  -ms-overflow-style:none;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1;min-width:90px;
+  padding:10px 14px;border:none;border-radius:var(--r2);
+  background:transparent;color:var(--muted2);
+  font-family:inherit;font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:all .3s var(--ease);
+  white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.tab:hover{color:var(--text);background:var(--card2)}
+.tab.active{
+  background:var(--accent);color:#000;
+  box-shadow:0 4px 16px var(--glow);
+}
+.tab .tab-icon{font-size:1.1rem}
+.tab .tab-badge{
+  background:rgba(0,0,0,.2);
+  font-size:.65rem;padding:1px 6px;border-radius:100px;
+}
+.tab.active .tab-badge{background:rgba(0,0,0,.25)}
+
+/* ─── MAIN ─── */
+main{
+  position:relative;z-index:1;
+  max-width:720px;margin:0 auto;
+  padding:0 14px 100px;
+}
+
+/* ─── SHOW HEADER ─── */
+.show-header{
+  display:flex;align-items:center;gap:14px;
+  padding:20px;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--r);
+  margin-bottom:20px;
+  opacity:0;transform:translateY(16px);
+  transition:all .5s var(--ease);
+}
+.show-header.visible{opacity:1;transform:none}
+.show-cover{
+  width:72px;height:72px;border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.show-cover::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+}
+.show-info{flex:1;min-width:0}
+.show-name{font-size:1.2rem;font-weight:900;margin-bottom:4px}
+.show-desc{font-size:.78rem;color:var(--muted2);line-height:1.5}
+.show-stats{display:flex;gap:12px;margin-top:8px}
+.show-stat{
+  font-size:.7rem;color:var(--muted);
+  display:flex;align-items:center;gap:4px;
+}
+.show-stat strong{color:var(--accent)}
+
+/* ─── EPISODE CARD ─── */
+.ep-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:12px;
+  overflow:hidden;
+  cursor:pointer;
+  position:relative;
+  opacity:0;transform:translateY(28px);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease),opacity .01s;
+}
+.ep-card.visible{
+  animation:cardReveal .55s var(--ease) forwards;
+}
+@keyframes cardReveal{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.ep-card:hover{
+  border-color:var(--border2);
+  box-shadow:0 12px 48px rgba(0,0,0,.35);
+  transform:translateY(-2px);
+}
+.ep-card.active{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1px var(--accent),0 16px 60px rgba(0,0,0,.4);
+}
+
+/* Liquid hover effect */
+.ep-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 65%);
+  opacity:0;transition:opacity .4s;pointer-events:none;z-index:0;
+}
+.ep-card:hover::before{opacity:1}
+
+.ep-body{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;position:relative;z-index:1;
+}
+
+/* Play button circle */
+.ep-play-ring{
+  position:relative;flex-shrink:0;width:52px;height:52px;
+}
+.ep-play-ring svg{
+  position:absolute;inset:0;transform:rotate(-90deg);
+}
+.ep-play-ring circle{fill:none;stroke:var(--border);stroke-width:1.5}
+.ep-play-ring .progress-ring{
+  stroke:var(--accent);stroke-width:2;
+  stroke-dasharray:150;stroke-dashoffset:150;
+  transition:stroke-dashoffset .3s;
+}
+.ep-play-btn{
+  position:absolute;inset:6px;
+  border-radius:50%;border:none;
+  background:var(--card2);color:var(--text);
+  font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s;
+}
+.ep-card.active .ep-play-btn{background:var(--accent);color:#000;box-shadow:0 4px 20px var(--glow)}
+.ep-play-btn:hover{transform:scale(1.1)}
+
+.ep-info{flex:1;min-width:0}
+.ep-num{
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:3px;
+}
+.ep-title{
+  font-size:.9rem;font-weight:700;line-height:1.5;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:5px;
+}
+.ep-meta-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ep-tag{
+  font-size:.62rem;padding:2px 8px;border-radius:100px;
+  background:var(--card2);color:var(--muted2);border:1px solid var(--border);
+}
+.ep-dur{font-size:.7rem;color:var(--muted);margin-right:auto}
+
+/* Waveform */
+.ep-wave{
+  display:flex;align-items:center;gap:2px;height:28px;flex-shrink:0;
+}
+.ep-wave .wb{
+  width:3px;border-radius:2px;background:var(--border2);
+  transition:background .3s;
+}
+.ep-card.active .ep-wave .wb{background:var(--accent);animation:waveAnim .8s ease-in-out infinite}
+.ep-wave .wb:nth-child(1){height:6px;animation-delay:.00s}
+.ep-wave .wb:nth-child(2){height:14px;animation-delay:.08s}
+.ep-wave .wb:nth-child(3){height:22px;animation-delay:.16s}
+.ep-wave .wb:nth-child(4){height:10px;animation-delay:.04s}
+.ep-wave .wb:nth-child(5){height:18px;animation-delay:.12s}
+.ep-wave .wb:nth-child(6){height:8px;animation-delay:.20s}
+.ep-wave .wb:nth-child(7){height:16px;animation-delay:.06s}
+@keyframes waveAnim{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+
+/* ─── PLAYER PANEL ─── */
+.ep-player{
+  overflow:hidden;max-height:0;
+  transition:max-height .5s cubic-bezier(.4,0,.2,1);
+  background:var(--surface);
+  border-top:1px solid var(--border);
+}
+.ep-card.active .ep-player{max-height:200px}
+
+.player-inner{padding:14px 18px 16px;position:relative;z-index:1}
+
+/* Custom mini player */
+.mini-player{
+  display:flex;flex-direction:column;gap:12px;
+}
+.mp-top{display:flex;align-items:center;gap:12px}
+.mp-artwork{
+  width:48px;height:48px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;position:relative;overflow:hidden;
+}
+.mp-artwork::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+}
+.mp-details{flex:1;min-width:0}
+.mp-title{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.mp-author{font-size:.7rem;color:var(--muted2)}
+.mp-time{font-size:.7rem;color:var(--muted);direction:ltr;font-variant-numeric:tabular-nums}
+
+.mp-controls{display:flex;align-items:center;gap:12px}
+.mp-btn{
+  border:none;background:none;color:var(--muted2);
+  cursor:pointer;font-size:1.1rem;padding:6px;
+  border-radius:50%;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.mp-btn:hover{color:var(--text);background:var(--card2)}
+.mp-btn.main{
+  width:40px;height:40px;background:var(--accent);color:#000;
+  box-shadow:0 4px 16px var(--glow);
+}
+.mp-btn.main:hover{transform:scale(1.1);box-shadow:0 6px 24px var(--glow)}
+.mp-vol{font-size:.95rem}
+.mp-speed{
+  font-size:.68rem;font-weight:700;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:6px;padding:3px 7px;color:var(--muted2);cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+}
+.mp-speed:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Progress */
+.mp-progress{display:flex;align-items:center;gap:8px}
+.prog-track{
+  flex:1;height:4px;background:var(--border2);border-radius:100px;
+  cursor:pointer;position:relative;
+  transition:height .2s;
+}
+.prog-track:hover{height:6px}
+.prog-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:100px;width:0%;transition:width .15s linear;
+  position:relative;
+}
+.prog-fill::after{
+  content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);
+  width:12px;height:12px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 8px var(--glow);opacity:0;transition:opacity .2s;
+}
+.prog-track:hover .prog-fill::after{opacity:1}
+.prog-time{font-size:.65rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* Spotify iframe as fallback */
+.spotify-embed{
+  width:100%;height:80px;border:none;border-radius:10px;
+  display:block;margin-top:4px;
+}
+
+/* ─── EP ACTIONS ─── */
+.ep-actions{
+  display:flex;gap:8px;padding:0 18px 14px;position:relative;z-index:1;
+}
+.ep-card.active .ep-actions{display:flex}
+.ep-act{
+  flex:1;padding:8px 6px;border:1px solid var(--border);border-radius:var(--r2);
+  background:transparent;color:var(--muted2);font-family:inherit;font-size:.72rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .25s;text-decoration:none;font-weight:600;
+}
+.ep-act:hover{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
+.ep-act.primary{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
+
+/* ─── SECTION LABEL ─── */
+.section-lbl{
+  font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  color:var(--muted);text-transform:uppercase;
+  margin-bottom:14px;padding-right:2px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── EMPTY ─── */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--muted);
+}
+.empty .e-icon{font-size:3.5rem;margin-bottom:14px;opacity:.5}
+.empty p{font-size:.9rem;line-height:1.7}
+
+/* ─── SCROLL TOP ─── */
+#goTop{
+  position:fixed;bottom:22px;left:16px;
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font-size:1.1rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);z-index:300;
+  opacity:0;transform:translateY(12px) scale(.9);
+  transition:all .35s var(--ease);pointer-events:none;
+}
+#goTop.show{opacity:1;transform:none;pointer-events:auto}
+#goTop:hover{background:var(--accent);color:#000;border-color:var(--accent);transform:translateY(-2px)}
+
+/* ─── TOAST ─── */
+#toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--border2);color:var(--text);
+  padding:10px 22px;border-radius:100px;font-size:.8rem;
+  opacity:0;transition:all .3s var(--ease);z-index:400;pointer-events:none;
+  white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── REDUCED MOTION ─── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ─── MOBILE ─── */
+@media(max-width:480px){
+  .hero h1{font-size:2rem}
+  .tabs{padding:3px}
+  .tab{min-width:78px;font-size:.72rem;padding:9px 10px}
+  .ep-act span{display:none}
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+</style>
+</head>
+<body class="dark">
+
+<!-- Aurora bg -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-orb"></div>
+  <div class="aurora-orb"></div>
+  <div class="aurora-orb"></div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-dot"></div>
+    رادیو بکت
+  </div>
+  <div class="topbar-right">
+    <button class="tb-btn" id="themeBtn" onclick="toggleTheme()" title="حالت روشن/تاریک">🌙</button>
+    <a class="tb-btn" href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" title="تلگرام">📢</a>
+    <a class="tb-btn" href="https://www.instagram.com/behckettt/" target="_blank" title="اینستاگرام">📸</a>
+    <a class="tb-btn" href="https://linktr.ee/behckett" target="_blank" title="لینک‌تری">🔗</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="live-dot"></span>
+    پادکست ادبی فارسی
+  </div>
+  <h1>در جستجوی<br><em>معنای باخته</em></h1>
+  <p class="hero-sub">خوانش صدای داستان‌های ماندگار</p>
+
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" type="search" placeholder="جستجو اپیزود، نویسنده، کتاب..." autocomplete="off" />
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs" id="tabs">
+  <button class="tab active" data-show="all">
+    <span class="tab-icon">🎧</span> همه
+    <span class="tab-badge" id="badge-all">12</span>
+  </button>
+  <button class="tab" data-show="borideh">
+    <span class="tab-icon">✂️</span> بریده
+    <span class="tab-badge">3</span>
+  </button>
+  <button class="tab" data-show="boofkoor">
+    <span class="tab-icon">🦉</span> بوف‌کور
+    <span class="tab-badge">3</span>
+  </button>
+  <button class="tab" data-show="vikomt">
+    <span class="tab-icon">⚔️</span> ویکنت
+    <span class="tab-badge">3</span>
+  </button>
+  <button class="tab" data-show="tehran">
+    <span class="tab-icon">🏙️</span> تهران مخوف
+    <span class="tab-badge">3</span>
+  </button>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="mainContent"></main>
+
+<!-- SCROLL TOP -->
+<button id="goTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="بازگشت به بالا">↑</button>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const SHOWS = {
+  borideh:{
+    id:'borideh',title:'بریده',icon:'✂️',
+    color:'#f5c518',colorDim:'rgba(245,197,24,.12)',
+    desc:'داستان‌های کوتاه فارسی — فصل دوم',
+    totalEps:45,
+    rss:'https://anchor.fm/s/103cea30c/podcast/rss',
+    episodes:[
+      {
+        n:45,spotifyId:'4k0TXZOquqmYNSR8Ec7CJV',
+        title:'وسواس | مسافری غریب و حیران',
+        author:'بهرام صادقی',
+        tags:['فصل دوم','داستان کوتاه'],
+        dur:'۲۸ دقیقه'
+      },
+      {
+        n:44,spotifyId:'2YdJ8kSrCgHx7A8PKgsFjl',
+        title:'انتری که لوطیش مرده بود',
+        author:'صادق چوبک',
+        tags:['فصل دوم','رئالیسم'],
+        dur:'۳۱ دقیقه'
+      },
+      {
+        n:43,spotifyId:'27F8LlezwWVnKICa8MvcHR',
+        title:'چشمهایش',
+        author:'بزرگ علوی',
+        tags:['فصل اول','عشق'],
+        dur:'۲۵ دقیقه'
+      }
+    ]
+  },
+  boofkoor:{
+    id:'boofkoor',title:'بوف‌کور',icon:'🦉',
+    color:'#9b59b6',colorDim:'rgba(155,89,182,.12)',
+    desc:'خوانش کامل رمان هدایت',
+    totalEps:null,
+    rss:'https://anchor.fm/s/fdac4ec0/podcast/rss',
+    episodes:[
+      {
+        n:1,spotifyId:'3uM3FwEOFWRECTPcuFhS1w',
+        title:'بوف‌کور — بخش اول',
+        author:'صادق هدایت',
+        tags:['هدایت','سوررئالیسم'],
+        dur:'۲۲ دقیقه'
+      },
+      {
+        n:2,spotifyId:'6MpAHWJTWBbLLcWVFCHniP',
+        title:'بوف‌کور — بخش دوم',
+        author:'صادق هدایت',
+        tags:['هدایت','کابوس'],
+        dur:'۱۹ دقیقه'
+      },
+      {
+        n:3,spotifyId:'5hLbHQLzMBHPFuRwVPtY2T',
+        title:'بوف‌کور — بخش سوم',
+        author:'صادق هدایت',
+        tags:['هدایت','مرگ'],
+        dur:'۲۴ دقیقه'
+      }
+    ]
+  },
+  vikomt:{
+    id:'vikomt',title:'ویکنت شقه‌شده',icon:'⚔️',
+    color:'#e74c3c',colorDim:'rgba(231,76,60,.12)',
+    desc:'ایتالو کالوینو — ترجمه فارسی',
+    totalEps:null,
+    rss:'https://anchor.fm/s/fd25dc64/podcast/rss',
+    episodes:[
+      {
+        n:1,spotifyId:'7cRrmN0dCDfgJD6IbPheSa',
+        title:'ویکنت شقه‌شده — بخش اول',
+        author:'ایتالو کالوینو',
+        tags:['فانتزی','فلسفی'],
+        dur:'۲۰ دقیقه'
+      },
+      {
+        n:2,spotifyId:'4VfQiKSQb7l9cMjxFKkXJH',
+        title:'ویکنت شقه‌شده — بخش دوم',
+        author:'ایتالو کالوینو',
+        tags:['فانتزی','جنگ'],
+        dur:'۲۳ دقیقه'
+      },
+      {
+        n:3,spotifyId:'0sNbKL1qoHuiXC0t7zSEb4',
+        title:'ویکنت شقه‌شده — بخش سوم',
+        author:'ایتالو کالوینو',
+        tags:['فانتزی','دوگانگی'],
+        dur:'۲۶ دقیقه'
+      }
+    ]
+  },
+  tehran:{
+    id:'tehran',title:'تهران مخوف',icon:'🏙️',
+    color:'#1abc9c',colorDim:'rgba(26,188,156,.12)',
+    desc:'مرتضی مشفق کاظمی',
+    totalEps:null,
+    rss:'https://anchor.fm/s/fe7eb98c/podcast/rss',
+    episodes:[
+      {
+        n:1,spotifyId:'4aaGMKZmNRjzIMa4kZxoVb',
+        title:'تهران مخوف — بخش اول',
+        author:'مرتضی مشفق کاظمی',
+        tags:['رمان','تاریخی'],
+        dur:'۳۰ دقیقه'
+      },
+      {
+        n:2,spotifyId:'3GrAVo8gHBMFxLFCJF1LmK',
+        title:'تهران مخوف — بخش دوم',
+        author:'مرتضی مشفق کاظمی',
+        tags:['رمان','عشق'],
+        dur:'۲۸ دقیقه'
+      },
+      {
+        n:3,spotifyId:'6LzP0HkDmJOQgjgGKXjkbW',
+        title:'تهران مخوف — بخش سوم',
+        author:'مرتضی مشفق کاظمی',
+        tags:['رمان','ماجرا'],
+        dur:'۳۲ دقیقه'
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let activeShow = 'all';
+let activeEp = null; // 'showId:n'
+let searchQ = '';
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+function toggleTheme(){
+  const isLight = document.body.classList.contains('light');
+  const mode = isLight ? 'dark' : 'light';
+  document.body.classList.toggle('light', !isLight);
+  document.body.classList.toggle('dark', isLight);
+  document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('rb-theme', mode);
+}
+(function(){
+  const t = localStorage.getItem('rb-theme') || 'dark';
+  if(t === 'light'){
+    document.body.classList.replace('dark','light');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if(!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  activeShow = tab.dataset.show;
+  activeEp = null;
+  render();
+});
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value.trim();
+  render();
+});
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function getFiltered(){
+  const shows = activeShow === 'all' ? Object.values(SHOWS) : [SHOWS[activeShow]].filter(Boolean);
+  if(!searchQ) return shows;
+  return shows.map(show => ({
+    ...show,
+    episodes: show.episodes.filter(ep =>
+      ep.title.includes(searchQ) || ep.author.includes(searchQ) || ep.tags.some(t => t.includes(searchQ))
+    )
+  })).filter(s => s.episodes.length > 0);
+}
+
+function render(){
+  const filtered = getFiltered();
+  const main = document.getElementById('mainContent');
+
+  if(!filtered.length || filtered.every(s => s.episodes.length === 0)){
+    main.innerHTML = `<div class="empty"><div class="e-icon">🔍</div><p>اپیزودی پیدا نشد<br><small>با کلمه دیگری جستجو کنید</small></p></div>`;
+    return;
+  }
+
+  main.innerHTML = filtered.map((show, si) => `
+    <div class="show-block" id="show-${show.id}">
+      ${renderShowHeader(show, si)}
+      <div class="section-lbl">اپیزودها</div>
+      ${show.episodes.map((ep, ei) => renderCard(show, ep, si, ei)).join('')}
+    </div>
+  `).join('');
+
+  // Intersection observer for scroll animations
+  requestAnimationFrame(() => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.ep-card, .show-header').forEach(el => observer.observe(el));
+  });
+
+  // Liquid mouse effect
+  document.querySelectorAll('.ep-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100) + '%');
+    });
+  });
+
+  // Restore active state
+  if(activeEp){
+    const [sid, n] = activeEp.split(':');
+    const card = document.getElementById(`card-${sid}-${n}`);
+    if(card) card.classList.add('active');
+  }
+}
+
+function renderShowHeader(show, si){
+  return `
+    <div class="show-header" style="animation-delay:${si*0.1}s">
+      <div class="show-cover" style="background:${show.colorDim};border:1px solid ${show.color}22">
+        ${show.icon}
+      </div>
+      <div class="show-info">
+        <div class="show-name" style="color:${show.color}">${show.title}</div>
+        <div class="show-desc">${show.desc}</div>
+        <div class="show-stats">
+          <div class="show-stat"><strong>${show.totalEps ? show.totalEps+'+ ' : ''}اپیزود</strong></div>
+          <div class="show-stat">•</div>
+          <div class="show-stat"><a href="${show.rss}" target="_blank" style="color:${show.color};text-decoration:none;font-size:.65rem">🔔 RSS</a></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCard(show, ep, si, ei){
+  const key = `${show.id}:${ep.n}`;
+  const isActive = activeEp === key;
+  return `
+    <div class="ep-card ${isActive ? 'active' : ''}"
+         id="card-${show.id}-${ep.n}"
+         style="animation-delay:${si*0.12 + ei*0.08}s"
+         onclick="toggleCard('${show.id}','${ep.n}','${show.color}','${show.icon}')">
+
+      <div class="ep-body">
+        <!-- Play ring -->
+        <div class="ep-play-ring">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="22"/>
+            <circle class="progress-ring" cx="26" cy="26" r="22"/>
+          </svg>
+          <button class="ep-play-btn" onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}','${show.color}','${show.icon}')">
+            ${isActive ? '⏸' : '▶'}
+          </button>
+        </div>
+
+        <div class="ep-info">
+          <div class="ep-num" style="color:${show.color}">${show.title} — اپیزود ${toFa(ep.n)}</div>
+          <div class="ep-title">${ep.title}</div>
+          <div class="ep-meta-row">
+            ${ep.tags.map(t => `<span class="ep-tag">${t}</span>`).join('')}
+            <span class="ep-dur">${ep.dur}</span>
+          </div>
+        </div>
+
+        <!-- Waveform -->
+        <div class="ep-wave">
+          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          <div class="wb"></div>
+        </div>
+      </div>
+
+      <!-- Player panel -->
+      <div class="ep-player">
+        <div class="player-inner">
+          <div class="mini-player">
+            <div class="mp-top">
+              <div class="mp-artwork" style="background:${show.colorDim};border:1px solid ${show.color}33">${show.icon}</div>
+              <div class="mp-details">
+                <div class="mp-title">${ep.title}</div>
+                <div class="mp-author">${ep.author} — ${show.title}</div>
+              </div>
+            </div>
+            <!-- Spotify embed (handles actual audio) -->
+            <iframe
+              class="spotify-embed"
+              src="https://open.spotify.com/embed/episode/${ep.spotifyId}?utm_source=generator&theme=0"
+              frameborder="0" allowfullscreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="ep-actions" onclick="event.stopPropagation()">
+        <a class="ep-act primary" href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank">
+          🎵 <span>Spotify</span>
+        </a>
+        <button class="ep-act" onclick="shareEp('${ep.spotifyId}','${ep.title}')">
+          🔗 <span>اشتراک</span>
+        </button>
+        <button class="ep-act" onclick="copyLnk('${ep.spotifyId}')">
+          📋 <span>کپی</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// TOGGLE CARD
+// ═══════════════════════════════════════════════
+function toggleCard(showId, n, color, icon){
+  const key = `${showId}:${n}`;
+  const wasActive = activeEp === key;
+
+  // Deactivate all
+  document.querySelectorAll('.ep-card').forEach(c => {
+    c.classList.remove('active');
+    const btn = c.querySelector('.ep-play-btn');
+    if(btn) btn.textContent = '▶';
+  });
+
+  if(!wasActive){
+    activeEp = key;
+    const card = document.getElementById(`card-${showId}-${n}`);
+    if(card){
+      card.classList.add('active');
+      const btn = card.querySelector('.ep-play-btn');
+      if(btn) btn.textContent = '⏸';
+      // Smooth scroll to card
+      setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+    }
+  } else {
+    activeEp = null;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SHARE / COPY
+// ═══════════════════════════════════════════════
+function shareEp(id, title){
+  const url = `https://open.spotify.com/episode/${id}`;
+  if(navigator.share){
+    navigator.share({title:'رادیو بکت | '+title, url}).catch(()=>{});
+  } else {
+    doCopy(url);
+    toast('لینک کپی شد ✓');
+  }
+}
+function copyLnk(id){
+  doCopy(`https://open.spotify.com/episode/${id}`);
+  toast('لینک کپی شد ✓');
+}
+function doCopy(text){
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).catch(()=>fbCopy(text)); }
+  else fbCopy(text);
+}
+function fbCopy(text){
+  const el=document.createElement('textarea');
+  el.value=text;el.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(el);el.select();
+  document.execCommand('copy');document.body.removeChild(el);
+}
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  clearTimeout(toastTimer);
+  t.textContent=msg;t.classList.add('show');
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ═══════════════════════════════════════════════
+// SCROLL TOP
+// ═══════════════════════════════════════════════
+const goTopBtn = document.getElementById('goTop');
+window.addEventListener('scroll',()=>{
+  goTopBtn.classList.toggle('show', window.scrollY > 280);
+},{passive:true});
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function toFa(n){
+  return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+// ═══════════════════════════════════════════════
+// RSS LOADER (async enrichment)
+// ═══════════════════════════════════════════════
+async function tryLoadRSS(showId, url){
+  try{
+    const res = await fetch(url);
+    if(!res.ok) return;
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    const items = [...xml.querySelectorAll('item')];
+    // Update durations and titles from feed
+    const show = SHOWS[showId];
+    if(!show || !items.length) return;
+    // Just update totalEps count
+    show.totalEps = items.length;
+    // Re-render if active
+    if(activeShow === 'all' || activeShow === showId) render();
+  }catch(e){ /* silent */ }
+}
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+render();
+
+// Async RSS enrichment
+Object.values(SHOWS).forEach(s => tryLoadRSS(s.id, s.rss));
+
+</script>
+</body>
+</html>
