@@ -2,448 +2,958 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>رادیو بکت | Radio Beckett</title>
   <style>
-    @font-face {
-      font-family: 'IranNastaliq';
-      src: url('fonts/IranNastaliq.woff2') format('woff2'),
-           url('fonts/IranNastaliq.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap');
 
     :root {
-      --light-bg: #fff;
-      --light-text: #111;
-      --light-card: #f2f2f2;
-      --dark-bg: #111;
-      --dark-text: #eee;
-      --dark-card: #222;
-      --accent: #ffcc00;
-    }
-
-    body {
-      font-family: 'IranNastaliq', sans-serif;
-      padding: 20px;
-      text-align: center;
-      background-color: var(--dark-bg);
-      color: var(--dark-text);
-      transition: background-color 0.3s, color 0.3s;
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --card: #1c1c1c;
+      --card-hover: #222;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #777;
+      --accent: #f5c518;
+      --accent-dim: rgba(245, 197, 24, 0.12);
+      --accent-glow: rgba(245, 197, 24, 0.25);
+      --red: #e05555;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body.light {
-      background-color: var(--light-bg);
-      color: var(--light-text);
+      --bg: #f7f5f0;
+      --surface: #eeecea;
+      --card: #ffffff;
+      --card-hover: #f9f9f7;
+      --border: #ddd;
+      --text: #1a1a1a;
+      --muted: #888;
+      --accent: #c9a000;
+      --accent-dim: rgba(201, 160, 0, 0.1);
+      --accent-glow: rgba(201, 160, 0, 0.2);
     }
 
-    .episode {
-      background: var(--dark-card);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 500px;
-      box-shadow: 0 0 10px #00000044;
-      transition: background 0.3s;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
     }
 
-    body.light .episode {
-      background: var(--light-card);
+    /* ─── NOISE TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
     }
 
-    iframe {
-      border-radius: 12px;
+    /* ─── HEADER ─── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: rgba(13, 13, 13, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
     }
-
-    a {
+    body.light .topbar {
+      background: rgba(247, 245, 240, 0.88);
+    }
+    .topbar-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       color: var(--accent);
+    }
+    .topbar-actions { display: flex; gap: 8px; align-items: center; }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition), transform 0.2s;
+      position: relative;
+    }
+    .icon-btn:hover { background: var(--card-hover); transform: scale(1.08); }
+    .icon-btn:active { transform: scale(0.96); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 60px 20px 40px;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 250px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+      margin-bottom: 18px;
+      animation: fadeSlideDown 0.6s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      animation: fadeSlideDown 0.7s 0.1s ease both;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 32px;
+      animation: fadeSlideDown 0.7s 0.2s ease both;
+    }
+
+    /* ─── SEARCH ─── */
+    .search-wrap {
+      position: relative;
+      max-width: 520px;
+      margin: 0 auto 12px;
+      animation: fadeSlideDown 0.7s 0.3s ease both;
+    }
+    .search-wrap .search-icon {
+      position: absolute;
+      top: 50%; right: 16px;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      padding: 14px 46px 14px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      background: var(--card);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    #search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    #search::placeholder { color: var(--muted); }
+
+    /* ─── FILTERS ─── */
+    .filters {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 20px;
+      margin-bottom: 36px;
+      animation: fadeSlideDown 0.7s 0.35s ease both;
+    }
+    .filter-btn {
+      padding: 6px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* ─── STATS BAR ─── */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 20px;
+      margin: 0 auto 40px;
+      max-width: 500px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    /* ─── MAIN LAYOUT ─── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 16px 120px;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-right: 4px;
+    }
+
+    /* ─── EPISODE CARD ─── */
+    .episode {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(24px);
+      position: relative;
+      overflow: hidden;
+    }
+    .episode::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .episode:hover::before { opacity: 1; }
+    .episode.visible {
+      animation: revealCard 0.5s ease forwards;
+    }
+    @keyframes revealCard {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .episode:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--accent-dim);
+      transform: translateY(-2px);
+    }
+
+    .ep-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .ep-number {
+      min-width: 40px;
+      height: 40px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .ep-meta { flex: 1; min-width: 0; }
+    .ep-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .ep-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ep-tag {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 100px;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .ep-tag.highlight { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+    /* ─── CUSTOM PLAYER ─── */
+    .player-wrap {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+    }
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .play-btn {
+      width: 44px; height: 44px;
+      min-width: 44px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent);
+      color: #000;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+    .play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px var(--accent-glow); }
+    .play-btn:active { transform: scale(0.95); }
+    .player-info { flex: 1; min-width: 0; }
+    .player-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+    .player-time { font-size: 0.7rem; color: var(--muted); direction: ltr; text-align: left; }
+    .volume-btn {
+      width: 32px; height: 32px;
+      border: none; background: transparent;
+      color: var(--muted); font-size: 1rem; cursor: pointer;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s;
+    }
+    .volume-btn:hover { color: var(--text); }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar-outer {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-bar-outer:hover { height: 6px; }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      width: 0%;
+      transition: width 0.2s linear;
+      position: relative;
+    }
+    .progress-bar-fill::after {
+      content: '';
+      position: absolute;
+      right: -4px; top: 50%;
+      transform: translateY(-50%);
+      width: 12px; height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .progress-bar-outer:hover .progress-bar-fill::after { opacity: 1; }
+
+    /* Spotify embed fallback */
+    .spotify-frame {
+      width: 100%;
+      height: 80px;
+      border-radius: var(--radius-sm);
+      border: none;
+      margin-top: 10px;
+    }
+
+    .ep-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .ep-action-btn {
+      flex: 1;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      transition: all 0.2s;
       text-decoration: none;
     }
-
-    .menu {
-      margin-bottom: 20px;
-    }
-
-    .menu button {
-      margin: 5px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      background-color: #333;
+    .ep-action-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .ep-action-btn.primary {
+      background: var(--accent-dim);
+      border-color: var(--accent);
       color: var(--accent);
     }
 
-    .menu button:hover {
-      background-color: #444;
+    /* ─── WAVEFORM DECORATION ─── */
+    .waveform {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      height: 20px;
+      margin: 4px 0;
+    }
+    .waveform.playing .bar { animation: wave 0.8s ease-in-out infinite; }
+    .waveform .bar {
+      width: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+    .waveform .bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .waveform .bar:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+    .waveform .bar:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+    .waveform .bar:nth-child(4) { height: 10px; animation-delay: 0.15s; }
+    .waveform .bar:nth-child(5) { height: 16px; animation-delay: 0.05s; }
+    .waveform .bar:nth-child(6) { height: 8px; animation-delay: 0.25s; }
+    .waveform .bar:nth-child(7) { height: 14px; animation-delay: 0.1s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1); }
     }
 
-    .tagline {
-      font-style: italic;
-      margin-bottom: 20px;
-      color: #ccc;
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
     }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
 
-    .advanced-menu {
+    /* ─── SOCIAL DOCK ─── */
+    .social-dock {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-      margin: 30px 0;
+      padding: 30px 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
     }
-
-    .advanced-menu a {
-      display: inline-block;
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
       padding: 10px 16px;
-      border-radius: 10px;
-      background-color: #333;
-      color: var(--accent);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.82rem;
       text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
+      transition: all 0.25s;
+      font-weight: 500;
     }
+    .social-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: translateY(-2px); }
 
-    .advanced-menu a:hover {
-      background-color: #444;
-    }
-
-    .scroll-top {
+    /* ─── SCROLL TO TOP ─── */
+    #scrollTop {
       position: fixed;
-      bottom: 20px;
+      bottom: 24px;
       left: 20px;
-      background-color: #333;
-      color: var(--accent);
-      padding: 10px 14px;
+      width: 44px; height: 44px;
       border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.1rem;
       cursor: pointer;
-      font-size: 24px;
-      box-shadow: 0 0 10px #00000088;
-      z-index: 999;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s;
+      opacity: 0;
+      transform: translateY(10px);
+      z-index: 200;
+    }
+    #scrollTop.show { opacity: 1; transform: translateY(0); }
+    #scrollTop:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 300;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── LOADING SKELETON ─── */
+    .skeleton {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .skel-line {
+      background: linear-gradient(90deg, var(--border) 25%, var(--card-hover) 50%, var(--border) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .episode h2 {
-      font-size: 1rem;
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .hero { padding: 40px 16px 24px; }
+      .stats-bar { gap: 20px; }
+      .ep-action-btn span { display: none; }
+    }
+
+    /* ─── REDUCED MOTION ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body class="dark">
-  <div class="menu">
-    <button onclick="setTheme('light')">☀️ حالت روز</button>
-    <button onclick="setTheme('dark')">🌙 حالت شب</button>
-    <button onclick="location.href='https://linktr.ee/behckett'">📬 تماس با ما</button>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-logo">🎧 رادیو بکت</div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="themeToggle" title="تغییر حالت" onclick="toggleTheme()">🌙</button>
+    <a href="https://linktr.ee/behckett" target="_blank" class="icon-btn" title="لینک‌تری">🔗</a>
   </div>
+</header>
 
-  <h1>🎧 رادیو بکت | Radio Beckett</h1>
-  <p class="tagline">در جستجوی معنای باخته!</p>
-  <p>اپیزودها را مستقیم از Spotify گوش دهید:</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🔴 در دسترس روی Spotify</div>
+  <h1>در جستجوی<br><span>معنای باخته</span></h1>
+  <p class="hero-tagline">پادکست ادبیات داستانی فارسی</p>
 
- <!DOCTYPE html>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="search" placeholder="جستجوی اپیزود، نویسنده، کتاب..." autocomplete="off" />
+  </div>
+</section>
 
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>رادیو بکت | Radio Beckett</title>
-
-<style>
-
-:root{
---bg:#111;
---card:#222;
---text:#eee;
---accent:#ffcc00;
-}
-
-.light{
---bg:#fff;
---card:#f2f2f2;
---text:#111;
-}
-
-body{
-margin:0;
-padding:20px;
-background:var(--bg);
-color:var(--text);
-font-family:tahoma,sans-serif;
-text-align:center;
-transition:.3s;
-}
-
-h1{
-margin-top:20px;
-}
-
-.menu{
-margin-bottom:20px;
-}
-
-.menu button{
-padding:10px 15px;
-margin:5px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
-
-#search{
-width:90%;
-max-width:600px;
-padding:12px;
-border-radius:10px;
-border:none;
-margin:20px auto;
-display:block;
-}
-
-.episode{
-max-width:700px;
-margin:15px auto;
-padding:20px;
-border-radius:12px;
-background:var(--card);
-}
-
-.episode h2{
-font-size:18px;
-line-height:1.8;
-}
-
-.episode p{
-line-height:1.8;
-font-size:14px;
-}
-
-a{
-color:var(--accent);
-text-decoration:none;
-}
-
-.scroll-top{
-position:fixed;
-left:20px;
-bottom:20px;
-width:50px;
-height:50px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-background:#333;
-color:#fff;
-cursor:pointer;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="menu">
-<button onclick="setTheme('light')">☀️ روز</button>
-<button onclick="setTheme('dark')">🌙 شب</button>
+<!-- FILTERS -->
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">همه</button>
+  <button class="filter-btn" data-filter="بریده">بریده</button>
+  <button class="filter-btn" data-filter="بوف‌کور">بوف‌کور</button>
+  <button class="filter-btn" data-filter="فصل اول">فصل اول</button>
 </div>
 
-<h1>🎧 رادیو بکت</h1>
-
-<p>در جستجوی معنای باخته!</p>
-
-<input
-id="search"
-placeholder="جستجوی اپیزود..."
-
->
-
-<div id="episodes"></div>
-
-<div class="scroll-top" onclick="scrollToTop()">
-⬆
+<!-- STATS -->
+<div class="stats-bar" id="statsBar" style="max-width:500px;margin:0 auto 32px;display:flex;justify-content:center;gap:32px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);">
+  <div class="stat"><div class="stat-num" id="statEpCount">—</div><div class="stat-label">اپیزود</div></div>
+  <div class="stat"><div class="stat-num">۲</div><div class="stat-label">فصل</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">داستان</div></div>
 </div>
+
+<!-- MAIN -->
+<main>
+  <div class="section-label" id="sectionLabel">آخرین اپیزودها</div>
+  <div id="episodes"></div>
+</main>
+
+<!-- SOCIAL DOCK -->
+<div class="social-dock">
+  <a href="https://www.instagram.com/behckettt/" target="_blank" class="social-btn">📸 اینستاگرام</a>
+  <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" class="social-btn">📢 تلگرام</a>
+  <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" class="social-btn">💬 بازخورد</a>
+  <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" class="social-btn">📚 پیشنهاد کتاب</a>
+  <a href="https://t.me/Nodelpunks" target="_blank" class="social-btn">🎓 کلاس تدوین</a>
+  <a href="https://linktr.ee/behckett" target="_blank" class="social-btn">ℹ️ درباره ما</a>
+</div>
+
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="scrollToTop()" title="بازگشت به بالا">⬆</button>
+
+<!-- TOAST -->
+<div id="toast"></div>
 
 <script>
+// ─── EPISODE DATA ───
+const EPISODES = [
+  {
+    id: 25,
+    title: "وسواس (مسافری غریب و حیران) | بهرام صادقی",
+    series: "بریده",
+    season: "فصل اول",
+    arc: "سایه‌های ناتمام",
+    spotifyId: "4k0TXZOquqmYNSR8Ec7CJV",
+    author: "بهرام صادقی",
+    tags: ["صادقی", "وسواس", "داستان کوتاه"]
+  },
+  {
+    id: 24,
+    title: "انتری که لوطیش مرده بود! | صادق چوبک",
+    series: "بریده",
+    season: "فصل اول",
+    arc: "سایه‌های ناتمام",
+    spotifyId: "2YdJ8kSrCgHx7A8PKgsFjl",
+    author: "صادق چوبک",
+    tags: ["چوبک", "انتری", "رئالیسم"]
+  },
+  {
+    id: 23,
+    title: "چشمهایش | بزرگ علوی",
+    series: "بریده",
+    season: "فصل اول",
+    arc: "سایه‌های ناتمام",
+    spotifyId: "27F8LlezwWVnKICa8MvcHR",
+    author: "بزرگ علوی",
+    tags: ["علوی", "چشمهایش", "عشق"]
+  }
+];
 
-let allEpisodes=[];
+// ─── STATE ───
+let currentFilter = "all";
+let currentSearch = "";
+let activeEpId = null;
 
-async function loadRSS(url){
-
-try{
-
-const res=await fetch(url);
-const text=await res.text();
-
-const parser=new DOMParser();
-const xml=parser.parseFromString(text,"text/xml");
-
-xml.querySelectorAll("item").forEach(item=>{
-
-allEpisodes.push({
-
-title:item.querySelector("title")?.textContent || "",
-
-description:item.querySelector("description")?.textContent || "",
-
-link:item.querySelector("link")?.textContent || ""
-
+// ─── INIT ───
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('rb_theme') || 'dark';
+  setTheme(saved);
+  renderEpisodes();
+  initObserver();
+  initScroll();
+  updateStats();
+  loadRSS();
 });
 
+// ─── THEME ───
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light');
+  setTheme(isLight ? 'dark' : 'light');
+}
+function setTheme(mode) {
+  document.body.classList.toggle('light', mode === 'light');
+  document.body.classList.toggle('dark', mode !== 'light');
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = mode === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('rb_theme', mode);
+}
+
+// ─── FILTERS ───
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = btn.dataset.filter;
+  renderEpisodes();
 });
 
-renderEpisodes();
-
-}catch(err){
-
-console.error(err);
-
-}
-
-}
-
-function renderEpisodes(search=""){
-
-const container=document.getElementById("episodes");
-
-container.innerHTML="";
-
-allEpisodes
-
-.filter(ep=>
-
-ep.title
-.toLowerCase()
-.includes(search.toLowerCase())
-
-)
-
-.forEach(ep=>{
-
-const div=document.createElement("div");
-
-div.className="episode";
-
-div.innerHTML=`
-
-<h2>${ep.title}</h2>
-
-<p>
-
-${ep.description
-.replace(/<[^>]*>/g,"")
-.substring(0,300)}
-
-</p>
-
-<a
-href="${ep.link}"
-target="_blank"
->
-
-🎧 شنیدن اپیزود
-
-</a>
-
-`;
-
-container.appendChild(div);
-
+// ─── SEARCH ───
+document.getElementById('search').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  renderEpisodes();
 });
 
+// ─── STATS ───
+function updateStats() {
+  document.getElementById('statEpCount').textContent = toFarsiNum(EPISODES.length);
+}
+function toFarsiNum(n) {
+  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 }
 
-document
-.getElementById("search")
-.addEventListener("input",e=>{
+// ─── FILTER LOGIC ───
+function getFiltered() {
+  return EPISODES.filter(ep => {
+    const q = currentSearch.toLowerCase();
+    const matchSearch = !q || ep.title.toLowerCase().includes(q)
+      || ep.author?.toLowerCase().includes(q)
+      || ep.series?.toLowerCase().includes(q)
+      || ep.tags?.some(t => t.toLowerCase().includes(q));
 
-renderEpisodes(e.target.value);
+    const matchFilter = currentFilter === 'all'
+      || ep.series?.includes(currentFilter)
+      || ep.season?.includes(currentFilter);
 
-});
-
-function setTheme(mode){
-
-document.body.className=mode;
-
-localStorage.setItem(
-"theme",
-mode
-);
-
+    return matchSearch && matchFilter;
+  });
 }
 
-window.onload=()=>{
+// ─── RENDER ───
+function renderEpisodes() {
+  const container = document.getElementById('episodes');
+  const filtered = getFiltered();
 
-const savedTheme=
-localStorage.getItem("theme")
-|| "dark";
+  if (!filtered.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>اپیزودی با این مشخصات پیدا نشد</p>
+      </div>`;
+    return;
+  }
 
-document.body.className=savedTheme;
+  container.innerHTML = filtered.map((ep, idx) => `
+    <div class="episode" id="ep-${ep.id}" style="animation-delay:${idx * 0.07}s" onclick="toggleEpisode(${ep.id})">
+      <div class="ep-header">
+        <div class="ep-number">${toFarsiNum(ep.id)}</div>
+        <div class="ep-meta">
+          <div class="ep-title">${ep.title}</div>
+          <div class="ep-tags">
+            ${ep.series ? `<span class="ep-tag highlight">${ep.series}</span>` : ''}
+            ${ep.season ? `<span class="ep-tag">${ep.season}</span>` : ''}
+            ${ep.arc ? `<span class="ep-tag">${ep.arc}</span>` : ''}
+          </div>
+        </div>
+        <div class="waveform ${activeEpId === ep.id ? 'playing' : ''}" id="wave-${ep.id}">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
 
-loadRSS("rss/borideh.xml");
-loadRSS("rss/boofkoor.xml");
+      <div class="ep-player" id="player-${ep.id}" style="display:${activeEpId === ep.id ? 'block' : 'none'}">
+        <div class="player-wrap">
+          <iframe
+            class="spotify-frame"
+            src="https://open.spotify.com/embed/episode/${ep.spotifyId}?utm_source=generator&theme=0"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
 
-};
+      <div class="ep-actions" onclick="event.stopPropagation()">
+        <a href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank" class="ep-action-btn primary">
+          🎵 <span>Spotify</span>
+        </a>
+        <button class="ep-action-btn" onclick="shareEpisode(${ep.id})">
+          🔗 <span>اشتراک</span>
+        </button>
+        <button class="ep-action-btn" onclick="copyLink(${ep.id})">
+          📋 <span>کپی لینک</span>
+        </button>
+      </div>
+    </div>
+  `).join('');
 
-function scrollToTop(){
-
-window.scrollTo({
-
-top:0,
-
-behavior:"smooth"
-
-});
-
+  initObserver();
 }
 
-</script>
+// ─── TOGGLE PLAYER ───
+function toggleEpisode(id) {
+  const wasActive = activeEpId === id;
+  activeEpId = wasActive ? null : id;
 
-</body>
-</html>
+  document.querySelectorAll('.ep-player').forEach(p => { p.style.display = 'none'; });
+  document.querySelectorAll('.waveform').forEach(w => w.classList.remove('playing'));
 
-  <div class="episode">
-    <h2>اپیزود ۲۵ | بریده | فصل اول | سایه‌های ناتمام | وسواس (مسافری غریب و حیران) | بهرام صادقی | رادیو بکت</h2>
-    <iframe src="https://open.spotify.com/embed/episode/4k0TXZOquqmYNSR8Ec7CJV?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+  if (!wasActive) {
+    const player = document.getElementById(`player-${id}`);
+    const wave = document.getElementById(`wave-${id}`);
+    if (player) player.style.display = 'block';
+    if (wave) wave.classList.add('playing');
+  }
+}
 
-  <div class="episode">
-    <h2>اپیزود ۲۴ | بریده | فصل اول | سایه‌های ناتمام | انتری که لوطیش مرده بود! | صادق چوبک | رادیو بکت</h2>
-    <iframe src="https://open.spotify.com/embed/episode/2YdJ8kSrCgHx7A8PKgsFjl?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+// ─── SHARE ───
+function shareEpisode(id) {
+  const ep = EPISODES.find(e => e.id === id);
+  if (!ep) return;
+  const url = `https://open.spotify.com/episode/${ep.spotifyId}`;
+  if (navigator.share) {
+    navigator.share({ title: ep.title, text: 'رادیو بکت | ' + ep.title, url });
+  } else {
+    copyToClipboard(url);
+    showToast('لینک کپی شد ✓');
+  }
+}
 
-  <div class="episode">
-    <h2>اپیزود ۲۳ | بریده | فصل اول | سایه‌های ناتمام | چشمهایش | بزرگ علوی | رادیو بکت</h2>
-    <iframe src="https://open.spotify.com/embed/episode/27F8LlezwWVnKICa8MvcHR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-  </div>
+function copyLink(id) {
+  const ep = EPISODES.find(e => e.id === id);
+  if (!ep) return;
+  copyToClipboard(`https://open.spotify.com/episode/${ep.spotifyId}`);
+  showToast('لینک کپی شد ✓');
+}
 
-  <p>برای دیدن همه اپیزودها به <a href="https://linktr.ee/behckett" target="_blank">لینک‌تری رادیو بکت</a> بروید.</p>
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
 
-  <div class="advanced-menu">
-    <a href="https://www.instagram.com/behckettt/" target="_blank">📸 اینستاگرام</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📢 تلگرام</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">💬 ارسال بازخورد</a>
-    <a href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank">📚 پیشنهاد کتاب</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🆘 پشتیبانی</a>
-    <a href="https://t.me/Nodelpunks" target="_blank">🎓 ثبت‌نام کلاس خصوصی تدوین</a>
-    <a href="https://linktr.ee/behckett" target="_blank">ℹ️ درباره ما</a>
-  </div>
+function fallbackCopy(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
 
-  <div class="scroll-top" onclick="scrollToTop()">⬆️</div>
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
 
-  <script>
-    function setTheme(mode) {
-      if (mode === 'light') {
-        document.body.classList.add('light');
-        document.body.classList.remove('dark');
-      } else {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
+// ─── SCROLL ANIMATIONS ───
+let observer;
+function initObserver() {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
-    }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.episode').forEach(el => observer.observe(el));
+}
+
+// ─── SCROLL TOP ───
+function initScroll() {
+  const btn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > 300);
+  }, { passive: true });
+}
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── RSS LOADER (dynamic episodes from feed) ───
+async function loadRSS() {
+  const feeds = ['rss/borideh.xml', 'rss/boofkoor.xml'];
+  let loaded = 0;
+  const rssEps = [];
+
+  for (const url of feeds) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const text = await res.text();
+      const xml = new DOMParser().parseFromString(text, 'text/xml');
+      xml.querySelectorAll('item').forEach(item => {
+        const title = item.querySelector('title')?.textContent || '';
+        const link = item.querySelector('link')?.textContent || '';
+        const desc = item.querySelector('description')?.textContent || '';
+        const spotifyMatch = link.match(/episode\/([a-zA-Z0-9]+)/);
+        if (spotifyMatch) {
+          rssEps.push({
+            id: rssEps.length + 100,
+            title,
+            series: url.includes('boofkoor') ? 'بوف‌کور' : 'بریده',
+            season: '',
+            arc: '',
+            spotifyId: spotifyMatch[1],
+            author: '',
+            tags: [],
+            description: desc.replace(/<[^>]*>/g, '').substring(0, 150)
+          });
+        }
+      });
+      loaded++;
+    } catch (e) {
+      // Feed unavailable, use static data
     }
-  </script>
+  }
+
+  if (rssEps.length > 0) {
+    rssEps.forEach(ep => {
+      if (!EPISODES.find(e => e.spotifyId === ep.spotifyId)) {
+        EPISODES.unshift(ep);
+      }
+    });
+    updateStats();
+    renderEpisodes();
+  }
+}
+</script>
 </body>
 </html>
