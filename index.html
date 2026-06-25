@@ -9,1218 +9,1078 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#07070a;
-  --surface:#0f0f14;
-  --card:#141419;
-  --card2:#1c1c24;
-  --border:#22222e;
-  --border2:#2e2e3d;
-  --text:#eeeef5;
-  --muted:#55556a;
-  --muted2:#8888a8;
-  --accent:#f5c518;
-  --accent2:#ffd84d;
-  --accent3:#ff9f43;
-  --glow:rgba(245,197,24,0.22);
-  --glow2:rgba(245,197,24,0.07);
-  --r:16px;
-  --r2:10px;
+  --bg:#0c0a07;
+  --ink:#f2edd6;
+  --ink2:#a89f88;
+  --ink3:#6b6355;
+  --gold:#d4a843;
+  --gold2:#f0c95e;
+  --gold-dim:rgba(212,168,67,.12);
+  --gold-glow:rgba(212,168,67,.25);
+  --surface:#141209;
+  --card:#1a1710;
+  --card2:#221f15;
+  --border:#2a2620;
+  --border2:#38332a;
+  --r:14px;
   --ease:cubic-bezier(.4,0,.2,1);
 }
 body.light{
-  --bg:#f2f0ec;
-  --surface:#e8e6e1;
+  --bg:#f5f0e8;
+  --ink:#1a1710;
+  --ink2:#5a5345;
+  --ink3:#8a8070;
+  --gold:#9a6f1a;
+  --gold2:#c49a2a;
+  --gold-dim:rgba(154,111,26,.1);
+  --gold-glow:rgba(154,111,26,.2);
+  --surface:#ede8dc;
   --card:#fff;
-  --card2:#f6f4f0;
-  --border:#e0ddd8;
-  --border2:#ccc8c0;
-  --text:#111118;
-  --muted:#aaa8a0;
-  --muted2:#777770;
-  --accent:#c49a00;
-  --accent2:#f5c518;
-  --accent3:#e08800;
-  --glow:rgba(196,154,0,0.18);
-  --glow2:rgba(196,154,0,0.06);
+  --card2:#f5f0e6;
+  --border:#ddd8cc;
+  --border2:#ccc7b8;
 }
 
 html{scroll-behavior:smooth}
 body{
   font-family:'Vazirmatn',Tahoma,sans-serif;
   background:var(--bg);
-  color:var(--text);
+  color:var(--ink);
   min-height:100vh;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  transition:background .4s,color .4s;
+  transition:background .35s,color .35s;
 }
 
-/* ── AURORA ── */
-.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.ao{position:absolute;border-radius:50%;filter:blur(140px);opacity:.09;animation:drift 14s ease-in-out infinite}
-.ao:nth-child(1){width:700px;height:450px;top:-120px;right:-180px;background:var(--accent);animation-delay:0s}
-.ao:nth-child(2){width:500px;height:600px;bottom:-120px;left:-120px;background:#7b3fe4;animation-delay:-5s}
-.ao:nth-child(3){width:350px;height:350px;top:45%;left:38%;background:#1abc9c;animation-delay:-10s}
-@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(35px,-25px) scale(1.08)}66%{transform:translate(-25px,18px) scale(.94)}}
-body.light .ao{opacity:.05}
+/* ── GRAIN TEXTURE OVERLAY ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.025;background-size:180px;
+}
+body.light::after{opacity:.015}
 
 /* ── TOPBAR ── */
 .topbar{
   position:sticky;top:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;height:58px;
-  background:rgba(7,7,10,.82);
-  backdrop-filter:blur(28px) saturate(180%);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  padding:0 20px;height:60px;
+  background:rgba(12,10,7,.9);
+  backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
   border-bottom:1px solid var(--border);
 }
-body.light .topbar{background:rgba(242,240,236,.88)}
-.topbar-logo{
-  display:flex;align-items:center;gap:10px;text-decoration:none;
+body.light .topbar{background:rgba(245,240,232,.92)}
+
+.logo-area{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-img{height:38px;width:auto;object-fit:contain;display:block}
+.logo-text{
+  font-size:.95rem;font-weight:900;color:var(--gold);
+  letter-spacing:-.01em;line-height:1;
 }
-.logo-img{height:36px;width:auto;object-fit:contain}
-.logo-fallback{font-size:1.05rem;font-weight:900;color:var(--accent);letter-spacing:-.3px}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 2.2s ease-in-out infinite;flex-shrink:0}
-@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow)}50%{opacity:.4;box-shadow:0 0 0 7px transparent}}
-.topbar-right{display:flex;gap:6px;align-items:center}
+.logo-sub{font-size:.58rem;color:var(--ink3);font-weight:400;letter-spacing:.05em;margin-top:2px}
+.logo-pulse{
+  width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 var(--gold-glow)}50%{box-shadow:0 0 0 8px transparent}}
+
+.topbar-right{display:flex;gap:6px}
 .tb-btn{
-  width:38px;height:38px;border-radius:50%;border:1px solid var(--border2);
-  background:var(--card2);color:var(--text);
-  cursor:pointer;font-size:.88rem;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .22s;text-decoration:none;
+  width:36px;height:36px;border-radius:9px;border:1px solid var(--border2);
+  background:var(--card2);color:var(--ink);cursor:pointer;
+  font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;text-decoration:none;
 }
-.tb-btn:hover{background:var(--border2);transform:scale(1.08);border-color:var(--accent)}
+.tb-btn:hover{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);transform:translateY(-1px)}
+
+/* ── PAGE LAYOUT ── */
+.page{max-width:760px;margin:0 auto;padding:0 16px 160px;position:relative;z-index:1}
 
 /* ── HERO ── */
-.hero{
-  position:relative;z-index:1;
-  text-align:center;padding:56px 20px 32px;
-}
-.hero-eyebrow{
+.hero{padding:52px 0 40px;text-align:center}
+.hero-badge{
   display:inline-flex;align-items:center;gap:7px;
-  background:var(--glow2);border:1px solid rgba(245,197,24,.28);
-  color:var(--accent);font-size:.7rem;font-weight:700;
+  border:1px solid rgba(212,168,67,.3);
+  background:rgba(212,168,67,.06);
+  color:var(--gold);font-size:.68rem;font-weight:700;
   padding:5px 16px;border-radius:100px;letter-spacing:.1em;
-  margin-bottom:22px;animation:fadeUp .55s var(--ease) both;
+  margin-bottom:24px;
 }
-.live-dot{width:6px;height:6px;border-radius:50%;background:#ff4040;animation:blink 1.4s infinite}
-.hero h1{
-  font-size:clamp(2rem,8vw,3.6rem);
-  font-weight:900;line-height:1.1;letter-spacing:-.025em;
-  margin-bottom:12px;animation:fadeUp .6s .08s var(--ease) both;
+.badge-dot{width:5px;height:5px;border-radius:50%;background:#ff4444;animation:pulse 1.6s infinite}
+.hero-title{
+  font-size:clamp(2.2rem,8vw,3.8rem);font-weight:900;
+  line-height:1.08;letter-spacing:-.03em;margin-bottom:14px;
 }
-.hero h1 em{
-  font-style:normal;color:transparent;
-  background:linear-gradient(130deg,var(--accent),var(--accent2),var(--accent3));
+.hero-title .gold{
+  color:transparent;
+  background:linear-gradient(120deg,var(--gold),var(--gold2),#f5a623,var(--gold));
   -webkit-background-clip:text;background-clip:text;
-  background-size:220% auto;animation:shimmer 3.5s linear infinite;
+  background-size:300% auto;animation:shimmer 4s linear infinite;
 }
-@keyframes shimmer{0%{background-position:0%}100%{background-position:220%}}
-.hero-sub{font-size:.92rem;color:var(--muted2);font-weight:300;margin-bottom:30px;animation:fadeUp .6s .15s var(--ease) both}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.hero-sub{font-size:.9rem;color:var(--ink3);font-weight:300;margin-bottom:36px;line-height:1.7}
 
 /* ── SEARCH ── */
-.search-wrap{
-  position:relative;max-width:520px;margin:0 auto 28px;
-  animation:fadeUp .6s .2s var(--ease) both;
+.search-box{
+  position:relative;max-width:500px;margin:0 auto 32px;
 }
-.search-ico{position:absolute;top:50%;right:18px;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:.9rem}
-#searchInput{
-  width:100%;padding:13px 48px 13px 20px;
-  border:1.5px solid var(--border2);border-radius:100px;
-  background:var(--card);color:var(--text);
-  font-family:inherit;font-size:.9rem;outline:none;
-  transition:all .3s;box-shadow:0 4px 24px rgba(0,0,0,.18);
+.search-box input{
+  width:100%;padding:13px 48px 13px 18px;
+  border:1.5px solid var(--border2);border-radius:var(--r);
+  background:var(--card);color:var(--ink);
+  font-family:inherit;font-size:.88rem;outline:none;
+  transition:all .25s;
 }
-#searchInput:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--glow),0 4px 24px rgba(0,0,0,.22)}
-#searchInput::placeholder{color:var(--muted)}
+.search-box input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-dim)}
+.search-box input::placeholder{color:var(--ink3)}
+.search-box .s-ico{
+  position:absolute;top:50%;right:16px;transform:translateY(-50%);
+  color:var(--ink3);font-size:.88rem;pointer-events:none;
+}
 
-/* ── TABS ── */
-.tabs{
-  display:flex;gap:0;max-width:680px;margin:0 auto 36px;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:4px;overflow-x:auto;
-  animation:fadeUp .6s .25s var(--ease) both;
-  -ms-overflow-style:none;scrollbar-width:none;
+/* ── SHOW FILTER CHIPS ── */
+.chips{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:40px;
 }
-.tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex:1;min-width:82px;padding:9px 12px;border:none;border-radius:var(--r2);
-  background:transparent;color:var(--muted2);
-  font-family:inherit;font-size:.76rem;font-weight:600;
-  cursor:pointer;transition:all .28s;white-space:nowrap;
-  display:flex;align-items:center;justify-content:center;gap:5px;
+.chip{
+  padding:8px 18px;border-radius:100px;border:1.5px solid var(--border2);
+  background:transparent;color:var(--ink3);
+  font-family:inherit;font-size:.76rem;font-weight:700;
+  cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:6px;
+  letter-spacing:.02em;
 }
-.tab:hover{color:var(--text);background:var(--card2)}
-.tab.active{background:var(--accent);color:#000;box-shadow:0 4px 18px var(--glow)}
-.tab-badge{background:rgba(0,0,0,.18);font-size:.6rem;padding:1px 5px;border-radius:100px}
-.tab.active .tab-badge{background:rgba(0,0,0,.22)}
+.chip:hover{border-color:var(--gold);color:var(--ink);background:var(--gold-dim)}
+.chip.active{
+  background:var(--gold);color:#0c0a07;
+  border-color:var(--gold);
+  box-shadow:0 4px 20px var(--gold-glow);
+}
+.chip-count{
+  background:rgba(0,0,0,.18);border-radius:100px;
+  font-size:.6rem;padding:1px 6px;
+}
+.chip.active .chip-count{background:rgba(0,0,0,.22)}
 
-/* ── MAIN ── */
-main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 14px 120px}
-
-/* ── SHOW HEADER ── */
-.show-header{
+/* ── SHOW SECTION ── */
+.show-section{margin-bottom:48px}
+.show-heading{
   display:flex;align-items:center;gap:14px;
-  padding:18px 20px;background:var(--card);
-  border:1px solid var(--border);border-radius:var(--r);
-  margin-bottom:16px;
-  opacity:0;transform:translateY(14px);
-  transition:all .45s var(--ease);
+  padding:16px 20px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:12px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease);
 }
-.show-header.visible{opacity:1;transform:none}
-.show-cover{
-  width:68px;height:68px;border-radius:var(--r2);
+.show-heading.in{opacity:1;transform:none}
+.show-icon{
+  width:60px;height:60px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.9rem;flex-shrink:0;position:relative;overflow:hidden;
+  font-size:1.7rem;flex-shrink:0;
 }
-.show-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent)}
-.show-info{flex:1;min-width:0}
-.show-name{font-size:1.1rem;font-weight:900;margin-bottom:3px}
-.show-desc{font-size:.76rem;color:var(--muted2);line-height:1.5}
-.show-stats{display:flex;gap:10px;margin-top:7px;align-items:center}
-.show-stat{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:3px}
-.show-stat strong{color:var(--accent)}
-.rss-btn{
-  font-size:.65rem;color:inherit;text-decoration:none;
+.show-text .name{font-size:1rem;font-weight:900;margin-bottom:3px}
+.show-text .desc{font-size:.74rem;color:var(--ink3);line-height:1.5}
+.show-text .meta{display:flex;gap:10px;margin-top:7px;align-items:center}
+.show-badge{
+  font-size:.63rem;padding:2px 9px;border-radius:100px;
+  font-weight:700;background:var(--gold-dim);
+  border:1px solid rgba(212,168,67,.3);color:var(--gold);
+}
+.rss-link{
+  font-size:.63rem;color:var(--ink3);text-decoration:none;
   border:1px solid var(--border2);border-radius:6px;padding:2px 8px;
   transition:all .2s;
 }
-.rss-btn:hover{border-color:var(--accent);color:var(--accent)}
+.rss-link:hover{border-color:var(--gold);color:var(--gold)}
 
-/* ── EPISODE CARD ── */
-.ep-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);margin-bottom:10px;overflow:hidden;
-  cursor:pointer;position:relative;
-  opacity:0;transform:translateY(24px);
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease);
-}
-.ep-card.visible{animation:cardIn .5s var(--ease) forwards}
-@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.ep-card:hover{border-color:var(--border2);box-shadow:0 10px 40px rgba(0,0,0,.32);transform:translateY(-1px)}
-.ep-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 14px 50px rgba(0,0,0,.38)}
-
-.ep-card::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 65%);
-  opacity:0;transition:opacity .4s;pointer-events:none;z-index:0;
-}
-.ep-card:hover::before{opacity:1}
-
-.ep-body{display:flex;align-items:center;gap:14px;padding:14px 16px;position:relative;z-index:1}
-
-/* Play button */
-.ep-play-wrap{flex-shrink:0;width:48px;height:48px;position:relative}
-.ep-play-wrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
-.ep-play-wrap circle{fill:none;stroke:var(--border2);stroke-width:1.5}
-.prog-ring{stroke:var(--accent);stroke-width:2;stroke-dasharray:138;stroke-dashoffset:138;transition:stroke-dashoffset .2s linear}
-.ep-play-btn{
-  position:absolute;inset:5px;border-radius:50%;border:none;
-  background:var(--card2);color:var(--text);
-  font-size:1rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .22s;
-}
-.ep-card.active .ep-play-btn{background:var(--accent);color:#000;box-shadow:0 4px 18px var(--glow)}
-.ep-play-btn:hover{transform:scale(1.08)}
-
-.ep-info{flex:1;min-width:0}
-.ep-num{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
-.ep-title{font-size:.88rem;font-weight:700;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-.ep-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.ep-tag{font-size:.6rem;padding:2px 7px;border-radius:100px;background:var(--card2);color:var(--muted2);border:1px solid var(--border)}
-.ep-dur{font-size:.68rem;color:var(--muted);margin-right:auto}
-
-/* Waveform */
-.ep-wave{display:flex;align-items:center;gap:2px;height:26px;flex-shrink:0}
-.wb{width:3px;border-radius:2px;background:var(--border2);transition:background .3s}
-.ep-card.active .wb{background:var(--accent);animation:wv .75s ease-in-out infinite}
-.wb:nth-child(1){height:5px;animation-delay:.00s}
-.wb:nth-child(2){height:13px;animation-delay:.07s}
-.wb:nth-child(3){height:20px;animation-delay:.14s}
-.wb:nth-child(4){height:9px;animation-delay:.04s}
-.wb:nth-child(5){height:17px;animation-delay:.11s}
-.wb:nth-child(6){height:7px;animation-delay:.18s}
-.wb:nth-child(7){height:15px;animation-delay:.06s}
-@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
-
-/* ── PLAYER PANEL ── */
-.ep-player{
-  overflow:hidden;max-height:0;
-  transition:max-height .5s cubic-bezier(.4,0,.2,1);
-  background:var(--surface);border-top:1px solid var(--border);
-}
-.ep-card.active .ep-player{max-height:320px}
-.player-inner{padding:14px 16px 16px;position:relative;z-index:1}
-
-/* Player layout */
-.pl-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.pl-art{
-  width:46px;height:46px;border-radius:9px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;position:relative;overflow:hidden;
-}
-.pl-art::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent)}
-.pl-info{flex:1;min-width:0}
-.pl-title{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.pl-author{font-size:.68rem;color:var(--muted2)}
-
-/* Progress bar */
-.pl-prog-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.pl-time{font-size:.64rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:34px}
-.pl-track{
-  flex:1;height:4px;background:var(--border2);border-radius:100px;
-  cursor:pointer;position:relative;transition:height .18s;
-}
-.pl-track:hover{height:7px}
-.pl-fill{
-  height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
-  border-radius:100px;width:0%;transition:width .15s linear;position:relative;pointer-events:none;
-}
-.pl-thumb{
-  position:absolute;right:-6px;top:50%;transform:translateY(-50%);
-  width:13px;height:13px;border-radius:50%;background:var(--accent);
-  box-shadow:0 0 10px var(--glow);opacity:0;transition:opacity .18s;pointer-events:none;
-}
-.pl-track:hover .pl-thumb{opacity:1}
-
-/* Controls row */
-.pl-controls{display:flex;align-items:center;justify-content:center;gap:10px}
-.pl-btn{
-  border:none;background:none;color:var(--muted2);
-  cursor:pointer;padding:7px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;font-size:.95rem;
-}
-.pl-btn:hover{color:var(--text);background:var(--card2)}
-.pl-btn svg{width:18px;height:18px;fill:currentColor}
-.pl-btn.main{
-  width:46px;height:46px;background:var(--accent);color:#000;
-  box-shadow:0 4px 18px var(--glow);font-size:1.2rem;
-}
-.pl-btn.main:hover{transform:scale(1.08);box-shadow:0 6px 26px var(--glow)}
-
-/* Volume */
-.pl-vol-wrap{display:flex;align-items:center;gap:6px}
-.pl-vol-icon{font-size:.9rem;cursor:pointer;color:var(--muted2);transition:color .2s;border:none;background:none;padding:0}
-.pl-vol-icon:hover{color:var(--text)}
-.pl-vol-track{
-  width:62px;height:3px;background:var(--border2);border-radius:100px;
-  cursor:pointer;position:relative;
-}
-.pl-vol-fill{height:100%;background:var(--accent2);border-radius:100px;width:100%;pointer-events:none}
-
-/* Speed */
-.pl-speed{
-  font-size:.66rem;font-weight:700;
-  background:var(--card2);border:1px solid var(--border2);
-  border-radius:6px;padding:3px 8px;color:var(--muted2);
-  cursor:pointer;transition:all .18s;white-space:nowrap;
-  font-family:inherit;
-}
-.pl-speed:hover,.pl-speed.on{border-color:var(--accent);color:var(--accent)}
-
-/* Bottom row */
-.pl-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
-
-/* Actions */
-.ep-actions{
-  display:none;gap:7px;padding:0 16px 14px;position:relative;z-index:1;
-}
-.ep-card.active .ep-actions{display:flex}
-.ep-act{
-  flex:1;padding:8px 5px;border:1px solid var(--border);border-radius:var(--r2);
-  background:transparent;color:var(--muted2);font-family:inherit;font-size:.7rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
-  transition:all .22s;text-decoration:none;font-weight:600;
-}
-.ep-act:hover{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
-.ep-act.primary{border-color:rgba(245,197,24,.4);color:var(--accent);background:var(--glow2)}
-
-/* ── SECTION LABEL ── */
-.section-lbl{
-  font-size:.64rem;font-weight:700;letter-spacing:.14em;
-  color:var(--muted);text-transform:uppercase;
-  margin-bottom:12px;padding-right:2px;
+.eps-label{
+  font-size:.6rem;font-weight:700;letter-spacing:.14em;color:var(--ink3);
+  text-transform:uppercase;margin-bottom:10px;margin-top:4px;
   display:flex;align-items:center;gap:10px;
 }
-.section-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.eps-label::before,.eps-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ── EMPTY ── */
-.empty{text-align:center;padding:56px 20px;color:var(--muted)}
-.empty .ei{font-size:3rem;margin-bottom:14px;opacity:.45}
-.empty p{font-size:.88rem;line-height:1.7}
-
-/* ── GLOBAL STICKY PLAYER ── */
-.global-player{
-  position:fixed;bottom:0;left:0;right:0;z-index:300;
-  background:rgba(10,10,14,.94);
-  backdrop-filter:blur(30px) saturate(200%);
-  -webkit-backdrop-filter:blur(30px) saturate(200%);
-  border-top:1px solid var(--border);
-  transform:translateY(100%);
-  transition:transform .4s var(--ease);
-  padding:10px 16px 14px;
+/* ── EPISODE CARD ── */
+.ep{
+  border:1px solid var(--border);border-radius:var(--r);
+  background:var(--card);margin-bottom:8px;overflow:hidden;
+  cursor:pointer;position:relative;
+  opacity:0;transform:translateY(20px);
+  transition:transform .28s var(--ease),box-shadow .28s,border-color .28s,opacity .01s;
 }
-body.light .global-player{background:rgba(242,240,236,.95)}
-.global-player.show{transform:translateY(0)}
-.gp-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
-.gp-top{display:flex;align-items:center;gap:10px}
-.gp-art{
-  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+.ep.in{animation:epIn .48s var(--ease) forwards}
+@keyframes epIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.ep:hover{transform:translateY(-2px);border-color:var(--border2);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.ep.active{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 12px 40px rgba(0,0,0,.45)}
+
+/* hover shimmer */
+.ep::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),var(--gold-dim) 0%,transparent 60%);
+  opacity:0;transition:opacity .35s;
+}
+.ep:hover::before{opacity:1}
+
+/* Card body */
+.ep-row{display:flex;align-items:center;gap:12px;padding:14px 16px;position:relative;z-index:1}
+
+/* Number badge */
+.ep-num-badge{
+  flex-shrink:0;width:40px;height:40px;border-radius:10px;
+  border:1.5px solid var(--border2);background:var(--card2);
   display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;overflow:hidden;position:relative;
+  font-size:.8rem;font-weight:900;color:var(--ink3);
+  transition:all .22s;font-variant-numeric:tabular-nums;
+  line-height:1;flex-direction:column;gap:0;
 }
-.gp-art::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent)}
-.gp-info{flex:1;min-width:0}
-.gp-title{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
-.gp-meta{font-size:.64rem;color:var(--muted2)}
-.gp-controls{display:flex;align-items:center;gap:6px}
-.gp-btn{
-  border:none;background:none;color:var(--muted2);cursor:pointer;
-  padding:6px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+.ep-num-badge .ep-n-label{font-size:.48rem;color:var(--ink3);font-weight:400;margin-top:1px;letter-spacing:.04em}
+.ep.active .ep-num-badge{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+
+.ep-main{flex:1;min-width:0}
+.ep-show-tag{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;opacity:.8}
+.ep-title{font-size:.9rem;font-weight:700;line-height:1.4;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ep-tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.ep-tag{font-size:.58rem;padding:2px 7px;border-radius:100px;background:var(--card2);color:var(--ink3);border:1px solid var(--border)}
+.ep-dur-tag{font-size:.6rem;color:var(--ink3);margin-right:auto}
+
+/* Play button */
+.ep-play{
+  flex-shrink:0;width:44px;height:44px;border-radius:50%;
+  border:1.5px solid var(--border2);background:var(--card2);color:var(--ink);
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .22s;
+}
+.ep:hover .ep-play{border-color:var(--gold);color:var(--gold)}
+.ep.active .ep-play{background:var(--gold);color:#0c0a07;border-color:var(--gold);box-shadow:0 4px 16px var(--gold-glow)}
+
+/* Waveform */
+.ep-wave{display:flex;align-items:center;gap:2px;height:24px;flex-shrink:0;margin-right:4px}
+.ep-wave .b{width:3px;border-radius:2px;background:var(--border2)}
+.ep.active .ep-wave .b{background:var(--gold);animation:wave .75s ease-in-out infinite}
+.b:nth-child(1){height:5px;animation-delay:0s}
+.b:nth-child(2){height:12px;animation-delay:.07s}
+.b:nth-child(3){height:20px;animation-delay:.14s}
+.b:nth-child(4){height:8px;animation-delay:.05s}
+.b:nth-child(5){height:16px;animation-delay:.12s}
+.b:nth-child(6){height:6px;animation-delay:.09s}
+@keyframes wave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+
+/* ── PLAYER PANEL ── */
+.ep-panel{
+  overflow:hidden;max-height:0;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1);
+  border-top:0 solid var(--border);
+}
+.ep.active .ep-panel{max-height:480px;border-top-width:1px}
+.ep-panel-inner{padding:16px;background:var(--surface);position:relative;z-index:1}
+
+/* Native audio player */
+.native-player{display:flex;flex-direction:column;gap:14px}
+
+.np-header{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.np-art{
+  width:44px;height:44px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+}
+.np-info .np-t{font-size:.82rem;font-weight:700;line-height:1.3;margin-bottom:2px}
+.np-info .np-a{font-size:.68rem;color:var(--ink3)}
+.np-status{margin-right:auto;font-size:.68rem;color:var(--gold);font-weight:700}
+
+/* Progress */
+.np-prog{display:flex;align-items:center;gap:8px}
+.np-time{font-size:.62rem;color:var(--ink3);white-space:nowrap;direction:ltr;font-variant-numeric:tabular-nums;min-width:32px}
+.np-bar{
+  flex:1;height:5px;background:var(--border2);border-radius:100px;
+  cursor:pointer;position:relative;transition:height .15s;
+}
+.np-bar:hover{height:8px}
+.np-bar-fill{
+  height:100%;border-radius:100px;width:0%;pointer-events:none;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  position:relative;transition:width .12s linear;
+}
+.np-bar-fill::after{
+  content:'';position:absolute;left:-5px;top:50%;transform:translateY(-50%);
+  width:12px;height:12px;border-radius:50%;background:var(--gold2);
+  box-shadow:0 0 8px var(--gold-glow);opacity:0;transition:opacity .15s;
+}
+.np-bar:hover .np-bar-fill::after{opacity:1}
+
+/* Controls */
+.np-controls{display:flex;align-items:center;justify-content:center;gap:8px}
+.np-btn{
+  border:none;background:none;color:var(--ink3);cursor:pointer;
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
   font-size:.88rem;transition:all .18s;
 }
-.gp-btn:hover{color:var(--text);background:var(--card2)}
-.gp-btn.main{
-  width:38px;height:38px;background:var(--accent);color:#000;
-  box-shadow:0 3px 14px var(--glow);border-radius:50%;font-size:1rem;
+.np-btn:hover{color:var(--ink);background:var(--card2)}
+.np-btn.skip-label{font-size:.58rem;font-weight:700;flex-direction:column;gap:0;line-height:1;color:var(--ink3);width:38px;height:38px}
+.np-btn.skip-label:hover{color:var(--gold)}
+.np-btn.play-main{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--gold);color:#0c0a07;
+  font-size:1.4rem;box-shadow:0 4px 20px var(--gold-glow);
 }
-.gp-btn.main:hover{transform:scale(1.07)}
-.gp-prog-wrap{display:flex;align-items:center;gap:8px}
-.gp-time{font-size:.6rem;color:var(--muted);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:30px}
-.gp-track{flex:1;height:3px;background:var(--border2);border-radius:100px;cursor:pointer;position:relative}
-.gp-track:hover{height:5px;transition:height .15s}
-.gp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;width:0%;pointer-events:none;transition:width .15s linear}
+.np-btn.play-main:hover{transform:scale(1.07);box-shadow:0 6px 28px var(--gold-glow)}
 
-/* ── SCROLL TOP ── */
+/* Bottom controls */
+.np-bottom{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.np-vol{display:flex;align-items:center;gap:6px}
+.vol-ico{font-size:.88rem;cursor:pointer;border:none;background:none;color:var(--ink3);padding:0;transition:color .2s}
+.vol-ico:hover{color:var(--gold)}
+.vol-bar{
+  width:68px;height:3px;background:var(--border2);border-radius:100px;
+  cursor:pointer;position:relative;transition:height .15s;
+}
+.vol-bar:hover{height:5px}
+.vol-fill{height:100%;border-radius:100px;background:var(--gold2);width:100%;pointer-events:none}
+.np-right{display:flex;align-items:center;gap:6px}
+.np-chip{
+  font-size:.62rem;font-weight:700;border:1.5px solid var(--border2);
+  border-radius:8px;padding:4px 9px;cursor:pointer;font-family:inherit;
+  background:transparent;color:var(--ink3);transition:all .18s;
+}
+.np-chip:hover,.np-chip.on{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+
+/* Spotify embed fallback */
+.spotify-fb{
+  border-radius:10px;overflow:hidden;
+  display:none;
+}
+.spotify-fb.show{display:block}
+.spotify-fb iframe{width:100%;height:152px;border:none;display:block}
+.spotify-fb-label{
+  font-size:.66rem;color:var(--ink3);text-align:center;
+  padding:8px 0 4px;
+}
+
+/* ── EPISODE ACTIONS ── */
+.ep-actions{
+  display:none;gap:6px;padding:0 16px 14px;
+}
+.ep.active .ep-actions{display:flex}
+.ep-action{
+  flex:1;padding:8px 4px;border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--ink3);font-family:inherit;font-size:.68rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:all .2s;text-decoration:none;font-weight:600;
+}
+.ep-action:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.ep-action.pri{border-color:rgba(212,168,67,.35);color:var(--gold);background:var(--gold-dim)}
+
+/* ── STICKY MINI PLAYER ── */
+.stick-player{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:rgba(12,10,7,.96);
+  backdrop-filter:blur(32px) saturate(200%);
+  -webkit-backdrop-filter:blur(32px) saturate(200%);
+  border-top:1px solid var(--border2);
+  transform:translateY(100%);transition:transform .35s var(--ease);
+  padding:10px 16px max(env(safe-area-inset-bottom,0px),12px);
+}
+body.light .stick-player{background:rgba(245,240,232,.97)}
+.stick-player.show{transform:translateY(0)}
+.sp-inner{max-width:760px;margin:0 auto}
+.sp-row1{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sp-art{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.sp-info{flex:1;min-width:0}
+.sp-title{font-size:.76rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.sp-meta{font-size:.62rem;color:var(--ink3)}
+.sp-ctrls{display:flex;align-items:center;gap:4px}
+.sp-btn{
+  border:none;background:none;color:var(--ink3);cursor:pointer;
+  padding:6px;border-radius:50%;font-size:.88rem;
+  display:flex;align-items:center;justify-content:center;transition:all .16s;
+}
+.sp-btn:hover{color:var(--ink);background:var(--card2)}
+.sp-btn.main{
+  width:36px;height:36px;background:var(--gold);color:#0c0a07;
+  border-radius:50%;font-size:1rem;
+}
+.sp-btn.main:hover{transform:scale(1.08)}
+.sp-prog{display:flex;align-items:center;gap:6px}
+.sp-time{font-size:.58rem;color:var(--ink3);direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:28px}
+.sp-bar{flex:1;height:3px;background:var(--border2);border-radius:100px;cursor:pointer;position:relative}
+.sp-bar:hover{height:5px;transition:height .12s}
+.sp-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0%;pointer-events:none}
+
+/* ── UTIL ── */
 #goTop{
-  position:fixed;bottom:72px;left:16px;
-  width:42px;height:42px;border-radius:50%;border:1px solid var(--border2);
-  background:var(--card);color:var(--text);font-size:1rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.28);z-index:300;
-  opacity:0;transform:translateY(10px) scale(.9);
-  transition:all .3s var(--ease);pointer-events:none;
+  position:fixed;bottom:80px;left:14px;z-index:290;
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--border2);
+  background:var(--card);color:var(--ink3);cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+  opacity:0;transform:scale(.85);transition:all .28s var(--ease);pointer-events:none;
 }
-#goTop.show{opacity:1;transform:none;pointer-events:auto}
-#goTop:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-
-/* ── TOAST ── */
+#goTop.show{opacity:1;transform:scale(1);pointer-events:auto}
+#goTop:hover{background:var(--gold);color:#0c0a07;border-color:var(--gold)}
 #toast{
-  position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(12px);
-  background:var(--card2);border:1px solid var(--border2);color:var(--text);
-  padding:9px 20px;border-radius:100px;font-size:.78rem;
-  opacity:0;transition:all .28s var(--ease);z-index:400;pointer-events:none;
-  white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.3);
+  position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--card2);border:1px solid var(--border2);color:var(--ink);
+  padding:9px 20px;border-radius:100px;font-size:.76rem;
+  opacity:0;transition:all .26s var(--ease);z-index:400;pointer-events:none;
+  white-space:nowrap;box-shadow:0 8px 28px rgba(0,0,0,.35);
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── FADE UP ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-
 /* ── MOBILE ── */
 @media(max-width:480px){
-  .hero h1{font-size:1.9rem}
-  .tab{min-width:74px;font-size:.7rem;padding:8px 9px}
-  .ep-act span{display:none}
-  .pl-vol-wrap{display:none}
+  .hero-title{font-size:2rem}
+  .chip{font-size:.7rem;padding:7px 12px}
+  .ep-action span{display:none}
+  .np-bottom .np-vol{display:none}
 }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
-::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-
-/* ── REDUCED MOTION ── */
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
-<body class="dark">
+<body>
 
-<div class="aurora" aria-hidden="true">
-  <div class="ao"></div><div class="ao"></div><div class="ao"></div>
-</div>
-
-<!-- TOPBAR -->
 <header class="topbar">
-  <a class="topbar-logo" href="#" onclick="return false">
-    <div class="logo-dot"></div>
-    <img class="logo-img" id="logoImg" src="" alt="رادیو بکت" style="display:none" onerror="this.style.display='none';document.getElementById('logoFb').style.display='block'"/>
-    <span class="logo-fallback" id="logoFb">رادیو بکت</span>
+  <a class="logo-area" href="#" onclick="return false">
+    <div class="logo-pulse"></div>
+    <img
+      id="logoImg"
+      src="https://drive.google.com/uc?export=view&id=1QeMJOoddon0_aYunVj2k_7m_zD5W86Dd"
+      alt="رادیو بکت"
+      class="logo-img"
+      onerror="this.style.display='none';document.getElementById('logoTxt').style.display='flex'"
+    />
+    <div id="logoTxt" style="display:none;flex-direction:column">
+      <div class="logo-text">رادیو بکت</div>
+      <div class="logo-sub">RADIO BECKETT</div>
+    </div>
   </a>
   <div class="topbar-right">
-    <button class="tb-btn" id="themeBtn" onclick="toggleTheme()" title="حالت روشن/تاریک">🌙</button>
+    <button class="tb-btn" id="themeBtn" onclick="toggleTheme()" title="روشن/تاریک">🌙</button>
     <a class="tb-btn" href="https://t.me/+jgTFdaJEUzFmOGE0" target="_blank" rel="noopener" title="تلگرام">📢</a>
     <a class="tb-btn" href="https://www.instagram.com/behckettt/" target="_blank" rel="noopener" title="اینستاگرام">📸</a>
-    <a class="tb-btn" href="https://linktr.ee/behckett" target="_blank" rel="noopener" title="لینک‌تری">🔗</a>
+    <a class="tb-btn" href="https://linktr.ee/behckett" target="_blank" rel="noopener" title="لینکتری">🔗</a>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow">
-    <span class="live-dot"></span>
-    پادکست ادبی فارسی
-  </div>
-  <h1>در جستجوی<br><em>معنای باخته</em></h1>
-  <p class="hero-sub">خوانش صدای داستان‌های ماندگار</p>
-  <div class="search-wrap">
-    <span class="search-ico">🔍</span>
-    <input id="searchInput" type="search" placeholder="جستجو اپیزود، نویسنده، کتاب..." autocomplete="off"/>
-  </div>
-</section>
+<div class="page">
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      پادکست ادبی فارسی
+    </div>
+    <h1 class="hero-title">
+      در جستجوی<br>
+      <span class="gold">معنای باخته</span>
+    </h1>
+    <p class="hero-sub">خوانش صدای داستان‌های ماندگار ادبیات فارسی و جهان</p>
 
-<!-- TABS -->
-<div class="tabs" id="tabs">
-  <button class="tab active" data-show="all">
-    <span>🎧</span> همه
-    <span class="tab-badge" id="badge-all">12</span>
-  </button>
-  <button class="tab" data-show="borideh">
-    <span>✂️</span> بریده
-    <span class="tab-badge">3</span>
-  </button>
-  <button class="tab" data-show="boofkoor">
-    <span>🦉</span> بوف‌کور
-    <span class="tab-badge">3</span>
-  </button>
-  <button class="tab" data-show="vikomt">
-    <span>⚔️</span> ویکنت
-    <span class="tab-badge">3</span>
-  </button>
-  <button class="tab" data-show="tehran">
-    <span>🏙️</span> تهران مخوف
-    <span class="tab-badge">3</span>
-  </button>
+    <div class="search-box">
+      <span class="s-ico">🔍</span>
+      <input id="searchInput" type="search" placeholder="جستجو در اپیزودها..." autocomplete="off"/>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip active" data-show="all">🎧 همه <span class="chip-count" id="cnt-all">12</span></button>
+      <button class="chip" data-show="borideh">✂️ بریده <span class="chip-count">3</span></button>
+      <button class="chip" data-show="boofkoor">🦉 بوف‌کور <span class="chip-count">3</span></button>
+      <button class="chip" data-show="vikomt">⚔️ ویکنت <span class="chip-count">3</span></button>
+      <button class="chip" data-show="tehran">🏙️ تهران مخوف <span class="chip-count">3</span></button>
+    </div>
+  </section>
+
+  <main id="main"></main>
 </div>
 
-<main id="mainContent"></main>
-
-<!-- GLOBAL STICKY PLAYER -->
-<div class="global-player" id="globalPlayer">
-  <div class="gp-inner">
-    <div class="gp-top">
-      <div class="gp-art" id="gpArt">🎙️</div>
-      <div class="gp-info">
-        <div class="gp-title" id="gpTitle">—</div>
-        <div class="gp-meta" id="gpMeta">—</div>
+<!-- Sticky player -->
+<div class="stick-player" id="stickPlayer">
+  <div class="sp-inner">
+    <div class="sp-row1">
+      <div class="sp-art" id="spArt">🎙️</div>
+      <div class="sp-info">
+        <div class="sp-title" id="spTitle">—</div>
+        <div class="sp-meta" id="spMeta">—</div>
       </div>
-      <div class="gp-controls">
-        <button class="gp-btn" id="gpSkipBack" title="۱۵ ثانیه قبل" onclick="skipTime(-15)">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7" y="16" font-size="6" fill="currentColor">15</text></svg>
-        </button>
-        <button class="gp-btn main" id="gpPlayBtn" onclick="toggleGlobalPlay()">▶</button>
-        <button class="gp-btn" id="gpSkipFwd" title="۱۵ ثانیه بعد" onclick="skipTime(15)">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2z"/><text x="7" y="16" font-size="6" fill="currentColor">15</text></svg>
-        </button>
+      <div class="sp-ctrls">
+        <button class="sp-btn" onclick="skip(-30)" title="۳۰ ثانیه قبل">⏮</button>
+        <button class="sp-btn" onclick="skip(-10)" title="۱۰ ثانیه قبل">↩</button>
+        <button class="sp-btn main" id="spPlayBtn" onclick="togglePlay()">▶</button>
+        <button class="sp-btn" onclick="skip(10)" title="۱۰ ثانیه بعد">↪</button>
+        <button class="sp-btn" onclick="skip(30)" title="۳۰ ثانیه بعد">⏭</button>
       </div>
     </div>
-    <div class="gp-prog-wrap">
-      <span class="gp-time" id="gpCurTime">۰:۰۰</span>
-      <div class="gp-track" id="gpTrack" onclick="seekGlobal(event)">
-        <div class="gp-fill" id="gpFill"></div>
+    <div class="sp-prog">
+      <span class="sp-time" id="spCur">۰:۰۰</span>
+      <div class="sp-bar" id="spBar" onclick="seekGlobal(event)">
+        <div class="sp-fill" id="spFill"></div>
       </div>
-      <span class="gp-time" id="gpDurTime">—</span>
+      <span class="sp-time" id="spDur">—</span>
     </div>
   </div>
 </div>
 
-<button id="goTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="بالا">↑</button>
+<button id="goTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div id="toast"></div>
-
-<!-- HIDDEN AUDIO ELEMENT -->
-<audio id="mainAudio" preload="none"></audio>
+<audio id="audio" preload="none"></audio>
 
 <script>
-// ═══ DATA ═══
-// NOTE: episode numbers are sorted descending (newest first)
-// Episodes 43-45 are the LATEST in "بریده" series
+// ──────────────────────────────────────────
+// DATA  (episodes newest first)
+// ──────────────────────────────────────────
 const SHOWS = {
   borideh:{
-    id:'borideh',title:'بریده',icon:'✂️',
-    color:'#f5c518',colorDim:'rgba(245,197,24,.1)',
-    desc:'داستان‌های کوتاه فارسی — فصل دوم',
-    totalEps:45,
+    id:'borideh', title:'بریده', icon:'✂️',
+    color:'#d4a843', dim:'rgba(212,168,67,.1)',
+    desc:'داستان‌های کوتاه فارسی', totalEps:45,
     rss:'https://anchor.fm/s/103cea30c/podcast/rss',
-    spotifyShow:'https://open.spotify.com/show/borideh',
-    // Episodes ordered newest first (43, 44, 45 are the latest)
     episodes:[
-      {
-        n:45,
-        title:'وسواس | مسافری غریب و حیران',
-        author:'بهرام صادقی',
-        tags:['فصل دوم','داستان کوتاه'],
-        dur:'۲۸ دقیقه',
-        spotifyId:'4k0TXZOquqmYNSR8Ec7CJV',
-        audioSrc:null // Will be loaded from RSS
-      },
-      {
-        n:44,
-        title:'انتری که لوطیش مرده بود',
-        author:'صادق چوبک',
-        tags:['فصل دوم','رئالیسم'],
-        dur:'۳۱ دقیقه',
-        spotifyId:'2YdJ8kSrCgHx7A8PKgsFjl',
-        audioSrc:null
-      },
-      {
-        n:43,
-        title:'چشمهایش',
-        author:'بزرگ علوی',
-        tags:['فصل اول','عشق'],
-        dur:'۲۵ دقیقه',
-        spotifyId:'27F8LlezwWVnKICa8MvcHR',
-        audioSrc:null
-      }
+      {n:45, title:'وسواس | مسافری غریب و حیران', author:'بهرام صادقی', tags:['فصل دوم','کوتاه'], dur:'۲۸:۱۴', spotifyId:'4k0TXZOquqmYNSR8Ec7CJV'},
+      {n:44, title:'انتری که لوطیش مرده بود',      author:'صادق چوبک',   tags:['فصل دوم','رئالیسم'], dur:'۳۱:۰۶', spotifyId:'2YdJ8kSrCgHx7A8PKgsFjl'},
+      {n:43, title:'چشمهایش',                     author:'بزرگ علوی',   tags:['فصل اول','عشق'],    dur:'۲۵:۳۸', spotifyId:'27F8LlezwWVnKICa8MvcHR'},
     ]
   },
   boofkoor:{
-    id:'boofkoor',title:'بوف‌کور',icon:'🦉',
-    color:'#9b59b6',colorDim:'rgba(155,89,182,.1)',
-    desc:'خوانش کامل رمان هدایت',
-    totalEps:null,
+    id:'boofkoor', title:'بوف‌کور', icon:'🦉',
+    color:'#9b59b6', dim:'rgba(155,89,182,.1)',
+    desc:'خوانش کامل رمان هدایت', totalEps:null,
     rss:'https://anchor.fm/s/fdac4ec0/podcast/rss',
     episodes:[
-      {n:3,title:'بوف‌کور — بخش سوم',author:'صادق هدایت',tags:['هدایت','مرگ'],dur:'۲۴ دقیقه',spotifyId:'5hLbHQLzMBHPFuRwVPtY2T',audioSrc:null},
-      {n:2,title:'بوف‌کور — بخش دوم',author:'صادق هدایت',tags:['هدایت','کابوس'],dur:'۱۹ دقیقه',spotifyId:'6MpAHWJTWBbLLcWVFCHniP',audioSrc:null},
-      {n:1,title:'بوف‌کور — بخش اول',author:'صادق هدایت',tags:['هدایت','سوررئالیسم'],dur:'۲۲ دقیقه',spotifyId:'3uM3FwEOFWRECTPcuFhS1w',audioSrc:null}
+      {n:3, title:'بوف‌کور — بخش سوم', author:'صادق هدایت', tags:['مرگ','کابوس'],    dur:'۲۴:۵۰', spotifyId:'5hLbHQLzMBHPFuRwVPtY2T'},
+      {n:2, title:'بوف‌کور — بخش دوم', author:'صادق هدایت', tags:['سورئال','کابوس'], dur:'۱۹:۲۲', spotifyId:'6MpAHWJTWBbLLcWVFCHniP'},
+      {n:1, title:'بوف‌کور — بخش اول', author:'صادق هدایت', tags:['هدایت','آغاز'],   dur:'۲۲:۱۰', spotifyId:'3uM3FwEOFWRECTPcuFhS1w'},
     ]
   },
   vikomt:{
-    id:'vikomt',title:'ویکنت شقه‌شده',icon:'⚔️',
-    color:'#e74c3c',colorDim:'rgba(231,76,60,.1)',
-    desc:'ایتالو کالوینو — ترجمه فارسی',
-    totalEps:null,
+    id:'vikomt', title:'ویکنت شقه‌شده', icon:'⚔️',
+    color:'#e74c3c', dim:'rgba(231,76,60,.1)',
+    desc:'ایتالو کالوینو — ترجمه فارسی', totalEps:null,
     rss:'https://anchor.fm/s/fd25dc64/podcast/rss',
     episodes:[
-      {n:3,title:'ویکنت شقه‌شده — بخش سوم',author:'ایتالو کالوینو',tags:['فانتزی','دوگانگی'],dur:'۲۶ دقیقه',spotifyId:'0sNbKL1qoHuiXC0t7zSEb4',audioSrc:null},
-      {n:2,title:'ویکنت شقه‌شده — بخش دوم',author:'ایتالو کالوینو',tags:['فانتزی','جنگ'],dur:'۲۳ دقیقه',spotifyId:'4VfQiKSQb7l9cMjxFKkXJH',audioSrc:null},
-      {n:1,title:'ویکنت شقه‌شده — بخش اول',author:'ایتالو کالوینو',tags:['فانتزی','فلسفی'],dur:'۲۰ دقیقه',spotifyId:'7cRrmN0dCDfgJD6IbPheSa',audioSrc:null}
+      {n:3, title:'ویکنت شقه‌شده — بخش سوم', author:'ایتالو کالوینو', tags:['دوگانگی','پایان'], dur:'۲۶:۴۰', spotifyId:'0sNbKL1qoHuiXC0t7zSEb4'},
+      {n:2, title:'ویکنت شقه‌شده — بخش دوم', author:'ایتالو کالوینو', tags:['جنگ','فانتزی'],   dur:'۲۳:۱۸', spotifyId:'4VfQiKSQb7l9cMjxFKkXJH'},
+      {n:1, title:'ویکنت شقه‌شده — بخش اول', author:'ایتالو کالوینو', tags:['فلسفی','آغاز'],   dur:'۲۰:۵۵', spotifyId:'7cRrmN0dCDfgJD6IbPheSa'},
     ]
   },
   tehran:{
-    id:'tehran',title:'تهران مخوف',icon:'🏙️',
-    color:'#1abc9c',colorDim:'rgba(26,188,156,.1)',
-    desc:'مرتضی مشفق کاظمی',
-    totalEps:null,
+    id:'tehran', title:'تهران مخوف', icon:'🏙️',
+    color:'#1abc9c', dim:'rgba(26,188,156,.1)',
+    desc:'مرتضی مشفق کاظمی', totalEps:null,
     rss:'https://anchor.fm/s/fe7eb98c/podcast/rss',
     episodes:[
-      {n:3,title:'تهران مخوف — بخش سوم',author:'مرتضی مشفق کاظمی',tags:['رمان','ماجرا'],dur:'۳۲ دقیقه',spotifyId:'6LzP0HkDmJOQgjgGKXjkbW',audioSrc:null},
-      {n:2,title:'تهران مخوف — بخش دوم',author:'مرتضی مشفق کاظمی',tags:['رمان','عشق'],dur:'۲۸ دقیقه',spotifyId:'3GrAVo8gHBMFxLFCJF1LmK',audioSrc:null},
-      {n:1,title:'تهران مخوف — بخش اول',author:'مرتضی مشفق کاظمی',tags:['رمان','تاریخی'],dur:'۳۰ دقیقه',spotifyId:'4aaGMKZmNRjzIMa4kZxoVb',audioSrc:null}
+      {n:3, title:'تهران مخوف — بخش سوم', author:'مرتضی مشفق کاظمی', tags:['ماجرا','رمان'],  dur:'۳۲:۲۰', spotifyId:'6LzP0HkDmJOQgjgGKXjkbW'},
+      {n:2, title:'تهران مخوف — بخش دوم', author:'مرتضی مشفق کاظمی', tags:['عشق','تاریخی'],  dur:'۲۸:۴۵', spotifyId:'3GrAVo8gHBMFxLFCJF1LmK'},
+      {n:1, title:'تهران مخوف — بخش اول', author:'مرتضی مشفق کاظمی', tags:['تاریخی','آغاز'], dur:'۳۰:۰۰', spotifyId:'4aaGMKZmNRjzIMa4kZxoVb'},
     ]
   }
 };
 
-// ═══ STATE ═══
+// ──────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────
 let activeShow = 'all';
-let activeKey = null; // 'showId:n'
-let searchQ = '';
-let isPlaying = false;
-let currentSpeed = 1;
-const speeds = [0.75, 1, 1.25, 1.5, 1.75, 2];
-let speedIdx = 1;
-let currentShowId = null;
-let currentEpN = null;
-let isMuted = false;
-let vol = 1;
+let activeKey  = null; // 'showId:n'
+let searchQ    = '';
+let playing    = false;
+let vol        = 1;
+let muted      = false;
+let speedIdx   = 1;
+const SPEEDS   = [0.5, 1, 1.25, 1.5, 1.75, 2];
+let sleepTimer = null;
+let sleepStep  = 0;
+const SLEEP    = [0,15,30,45,60];
 
-const audio = document.getElementById('mainAudio');
+const audio = document.getElementById('audio');
 
-// ═══ LOGO LOAD ═══
-(function loadLogo(){
-  // Try to load logo from Google Drive
-  const imgEl = document.getElementById('logoImg');
-  const fbEl = document.getElementById('logoFb');
-  // Google Drive direct download link
-  const driveId = '1QeMJOoddon0_aYunVj2k_7m_zD5W86Dd';
-  imgEl.src = `https://drive.google.com/uc?export=view&id=${driveId}`;
-  imgEl.style.display = 'block';
-  imgEl.onload = () => { fbEl.style.display = 'none'; };
-  imgEl.onerror = () => { imgEl.style.display = 'none'; fbEl.style.display = 'block'; };
-})();
-
-// ═══ THEME ═══
+// ──────────────────────────────────────────
+// THEME
+// ──────────────────────────────────────────
 function toggleTheme(){
-  const isLight = document.body.classList.contains('light');
-  document.body.classList.toggle('light', !isLight);
-  document.body.classList.toggle('dark', isLight);
-  document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('rb-theme', isLight ? 'dark' : 'light');
+  const l = document.body.classList.toggle('light');
+  document.getElementById('themeBtn').textContent = l ? '☀️' : '🌙';
+  localStorage.setItem('rb-theme', l ? 'light' : 'dark');
 }
-(function(){
-  const t = localStorage.getItem('rb-theme') || 'dark';
-  if(t === 'light'){
-    document.body.classList.replace('dark','light');
-    document.getElementById('themeBtn').textContent = '☀️';
+(()=>{
+  if(localStorage.getItem('rb-theme')==='light'){
+    document.body.classList.add('light');
+    document.getElementById('themeBtn').textContent='☀️';
   }
 })();
 
-// ═══ TABS ═══
-document.getElementById('tabs').addEventListener('click', e => {
-  const tab = e.target.closest('.tab');
-  if(!tab) return;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-  activeShow = tab.dataset.show;
+// ──────────────────────────────────────────
+// TABS / SEARCH
+// ──────────────────────────────────────────
+document.getElementById('chips').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  activeShow = chip.dataset.show;
   render();
 });
-
-// ═══ SEARCH ═══
-document.getElementById('searchInput').addEventListener('input', e => {
+document.getElementById('searchInput').addEventListener('input', e=>{
   searchQ = e.target.value.trim();
   render();
 });
 
-// ═══ AUDIO EVENTS ═══
-audio.addEventListener('timeupdate', onTimeUpdate);
-audio.addEventListener('ended', onEnded);
-audio.addEventListener('play', () => { isPlaying = true; syncPlayBtns(); });
-audio.addEventListener('pause', () => { isPlaying = false; syncPlayBtns(); });
-audio.addEventListener('error', onAudioError);
-audio.addEventListener('loadedmetadata', () => {
-  updateDuration();
-});
-
-function onTimeUpdate(){
+// ──────────────────────────────────────────
+// AUDIO EVENTS
+// ──────────────────────────────────────────
+audio.addEventListener('timeupdate', ()=>{
   if(!audio.duration) return;
-  const pct = audio.currentTime / audio.duration;
-  // Update global player
-  document.getElementById('gpFill').style.width = (pct*100)+'%';
-  document.getElementById('gpCurTime').textContent = fmtTime(audio.currentTime);
-  // Update inline player if open
+  const p = audio.currentTime / audio.duration;
+  // sticky
+  document.getElementById('spFill').style.width = (p*100)+'%';
+  document.getElementById('spCur').textContent  = fmtT(audio.currentTime);
+  // inline
   if(activeKey){
     const [sid,n] = activeKey.split(':');
-    const fillEl = document.getElementById(`fill-${sid}-${n}`);
-    const curEl = document.getElementById(`cur-${sid}-${n}`);
-    const ring = document.getElementById(`ring-${sid}-${n}`);
-    if(fillEl) fillEl.style.width = (pct*100)+'%';
-    if(curEl) curEl.textContent = fmtTime(audio.currentTime);
-    if(ring){ const c = 138; ring.style.strokeDashoffset = c - pct*c; }
+    const f = document.getElementById(`np-fill-${sid}-${n}`);
+    const t = document.getElementById(`np-cur-${sid}-${n}`);
+    if(f) f.style.width = (p*100)+'%';
+    if(t) t.textContent = fmtT(audio.currentTime);
   }
-}
-
-function onEnded(){
-  isPlaying = false;
-  syncPlayBtns();
-  // Auto-play next episode
-  autoNext();
-}
-
-function onAudioError(){
-  // If direct audio fails, show Spotify fallback
-  toast('پخش مستقیم موجود نیست — Spotify باز می‌شود');
-  if(currentShowId && currentEpN){
-    const ep = getEp(currentShowId, currentEpN);
-    if(ep && ep.spotifyId){
-      window.open(`https://open.spotify.com/episode/${ep.spotifyId}`, '_blank');
-    }
-  }
-}
-
-function updateDuration(){
+});
+audio.addEventListener('loadedmetadata', ()=>{
   const d = audio.duration;
-  if(!d || isNaN(d)) return;
-  document.getElementById('gpDurTime').textContent = fmtTime(d);
+  if(!d||isNaN(d)) return;
+  document.getElementById('spDur').textContent = fmtT(d);
   if(activeKey){
     const [sid,n] = activeKey.split(':');
-    const durEl = document.getElementById(`dur-${sid}-${n}`);
-    if(durEl) durEl.textContent = fmtTime(d);
+    const el = document.getElementById(`np-dur-${sid}-${n}`);
+    if(el) el.textContent = fmtT(d);
+  }
+});
+audio.addEventListener('play',  ()=>{ playing=true;  syncBtns(); });
+audio.addEventListener('pause', ()=>{ playing=false; syncBtns(); });
+audio.addEventListener('ended', ()=>{ playing=false; syncBtns(); autoNext(); });
+audio.addEventListener('error', ()=>{ handleAudioErr(); });
+audio.addEventListener('waiting', ()=>{ setStatus('در حال بارگذاری…'); });
+audio.addEventListener('canplay', ()=>{ setStatus(''); });
+
+function setStatus(msg){
+  if(!activeKey) return;
+  const [sid,n] = activeKey.split(':');
+  const el = document.getElementById(`np-status-${sid}-${n}`);
+  if(el) el.textContent = msg;
+}
+
+function handleAudioErr(){
+  if(!activeKey) return;
+  const [sid,n] = activeKey.split(':');
+  // show Spotify embed
+  const fb = document.getElementById(`sp-fb-${sid}-${n}`);
+  if(fb){
+    const ep = getEp(sid, n);
+    if(ep && !fb.querySelector('iframe').src.includes('spotify')){
+      fb.querySelector('iframe').src = `https://open.spotify.com/embed/episode/${ep.spotifyId}?utm_source=generator&theme=0`;
+    }
+    fb.classList.add('show');
+  }
+  setStatus('پخش مستقیم: استفاده از Spotify');
+}
+
+function syncBtns(){
+  const icon = playing ? '⏸' : '▶';
+  document.getElementById('spPlayBtn').textContent = icon;
+  if(activeKey){
+    const [sid,n] = activeKey.split(':');
+    const b1 = document.getElementById(`npbtn-${sid}-${n}`);
+    if(b1) b1.textContent = icon;
+    const b2 = document.querySelector(`#card-${sid}-${n} .ep-play`);
+    if(b2) b2.textContent = playing ? '⏸' : '▶';
   }
 }
 
 function autoNext(){
-  if(!currentShowId || !currentEpN) return;
-  const show = SHOWS[currentShowId];
+  if(!activeKey) return;
+  const [sid,n] = activeKey.split(':');
+  const show = SHOWS[sid];
   if(!show) return;
-  const idx = show.episodes.findIndex(e => e.n == currentEpN);
-  if(idx > 0){
-    const next = show.episodes[idx-1]; // descending order, so next newer = idx-1... actually auto-play older
-    const prev = show.episodes[idx+1];
-    if(prev){
-      playEp(currentShowId, prev.n);
-    }
-  }
+  const idx = show.episodes.findIndex(e=>String(e.n)===String(n));
+  const next = show.episodes[idx+1];
+  if(next) activate(sid, next.n);
 }
 
-// ═══ PLAY CONTROL ═══
-function playEp(showId, n){
+// ──────────────────────────────────────────
+// ACTIVATE EPISODE
+// ──────────────────────────────────────────
+function activate(showId, n){
   const show = SHOWS[showId];
-  const ep = show.episodes.find(e => e.n == n);
+  const ep   = getEp(showId, n);
   if(!show || !ep) return;
 
-  currentShowId = showId;
-  currentEpN = n;
-  const key = `${showId}:${n}`;
+  // stop current
+  if(playing) audio.pause();
+  document.querySelectorAll('.ep').forEach(c=>{
+    c.classList.remove('active');
+  });
 
-  // Deactivate previous
-  document.querySelectorAll('.ep-card').forEach(c => c.classList.remove('active'));
-  activeKey = key;
-
+  activeKey = `${showId}:${n}`;
   const card = document.getElementById(`card-${showId}-${n}`);
   if(card){
     card.classList.add('active');
-    setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
   }
 
-  // Update global player UI
-  document.getElementById('gpArt').textContent = show.icon;
-  document.getElementById('gpArt').style.background = show.colorDim;
-  document.getElementById('gpTitle').textContent = ep.title;
-  document.getElementById('gpMeta').textContent = `${ep.author} — ${show.title}`;
-  document.getElementById('gpFill').style.width = '0%';
-  document.getElementById('gpCurTime').textContent = '۰:۰۰';
-  document.getElementById('gpDurTime').textContent = '—';
-  document.getElementById('globalPlayer').classList.add('show');
+  // update sticky
+  document.getElementById('spArt').textContent   = show.icon;
+  document.getElementById('spArt').style.background = show.dim;
+  document.getElementById('spTitle').textContent  = ep.title;
+  document.getElementById('spMeta').textContent   = ep.author+' — '+show.title;
+  document.getElementById('spFill').style.width   = '0%';
+  document.getElementById('spCur').textContent    = '۰:۰۰';
+  document.getElementById('spDur').textContent    = '—';
+  document.getElementById('stickPlayer').classList.add('show');
 
-  // Determine audio source
-  let src = ep.audioSrc;
-  if(!src){
-    // Try RSS-loaded sources first, then Spotify embed fallback
-    const rssKey = `${showId}:${n}:audio`;
-    src = sessionStorage.getItem(rssKey) || null;
-  }
-
-  if(src){
-    audio.src = src;
-    audio.load();
-    audio.play().catch(()=>{});
+  // try audio src from RSS cache
+  const cached = sessionStorage.getItem(`${showId}:${n}:url`);
+  if(cached){
+    loadAndPlay(cached);
   } else {
-    // No direct audio - show Spotify embed in the card
-    showSpotifyFallback(showId, n, ep.spotifyId);
-    toast('در حال بارگذاری از RSS...');
-    // Try loading RSS
-    loadRSSForShow(showId).then(() => {
-      const rssKey = `${showId}:${n}:audio`;
-      const rssSrc = sessionStorage.getItem(rssKey);
-      if(rssSrc){
-        ep.audioSrc = rssSrc;
-        audio.src = rssSrc;
-        audio.load();
-        audio.play().catch(()=>{});
-        hideSpotifyFallback(showId, n);
-      }
+    // Trigger RSS load then try again
+    loadRSS(showId).then(()=>{
+      const url = sessionStorage.getItem(`${showId}:${n}:url`);
+      if(url){ loadAndPlay(url); }
+      else { handleAudioErr(); }
     });
   }
 }
 
-function showSpotifyFallback(showId, n, spotifyId){
-  const fbEl = document.getElementById(`spotify-fb-${showId}-${n}`);
-  if(fbEl){
-    fbEl.style.display = 'block';
-    fbEl.src = `https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator&theme=0`;
-  }
+function loadAndPlay(src){
+  audio.src = src;
+  audio.playbackRate = SPEEDS[speedIdx];
+  audio.volume = vol;
+  audio.muted  = muted;
+  audio.load();
+  audio.play().catch(()=>handleAudioErr());
 }
 
-function hideSpotifyFallback(showId, n){
-  const fbEl = document.getElementById(`spotify-fb-${showId}-${n}`);
-  if(fbEl) fbEl.style.display = 'none';
-}
-
-function toggleCard(showId, n){
+function toggleEp(showId, n){
   const key = `${showId}:${n}`;
   if(activeKey === key){
-    // Toggle play/pause
-    if(isPlaying){ audio.pause(); }
-    else { audio.play().catch(()=>{}); }
+    playing ? audio.pause() : audio.play().catch(()=>{});
   } else {
-    if(isPlaying || activeKey){ audio.pause(); }
-    playEp(showId, n);
+    activate(showId, n);
   }
 }
 
-function toggleGlobalPlay(){
-  if(!currentShowId) return;
-  if(isPlaying){ audio.pause(); }
-  else { audio.play().catch(()=>{}); }
+function togglePlay(){
+  if(!activeKey) return;
+  playing ? audio.pause() : audio.play().catch(()=>{});
 }
 
-function syncPlayBtns(){
-  // Global player
-  document.getElementById('gpPlayBtn').textContent = isPlaying ? '⏸' : '▶';
-  // Inline
-  if(activeKey){
-    const [sid,n] = activeKey.split(':');
-    const btn = document.getElementById(`pbtn-${sid}-${n}`);
-    if(btn) btn.textContent = isPlaying ? '⏸' : '▶';
-  }
-}
+// ──────────────────────────────────────────
+// CONTROLS
+// ──────────────────────────────────────────
+function skip(s){ audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime+s)); }
 
-function skipTime(sec){
-  audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime + sec));
-}
-
-// ═══ SEEK ═══
-function seekTrack(e, showId, n){
+function seekBar(e, showId, n){
   e.stopPropagation();
-  const track = document.getElementById(`track-${showId}-${n}`);
-  if(!track || !audio.duration) return;
-  const rect = track.getBoundingClientRect();
-  // RTL: right side = start
-  const pct = 1 - (e.clientX - rect.left) / rect.width;
-  audio.currentTime = pct * audio.duration;
+  if(!audio.duration) return;
+  const bar = document.getElementById(`np-bar-${showId}-${n}`);
+  const r   = bar.getBoundingClientRect();
+  // RTL: right = 0
+  const p   = 1 - (e.clientX - r.left) / r.width;
+  audio.currentTime = Math.max(0, Math.min(audio.duration, p * audio.duration));
 }
 
 function seekGlobal(e){
-  const track = document.getElementById('gpTrack');
-  if(!track || !audio.duration) return;
-  const rect = track.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = pct * audio.duration;
+  if(!audio.duration) return;
+  const bar = document.getElementById('spBar');
+  const r   = bar.getBoundingClientRect();
+  const p   = (e.clientX - r.left) / r.width;
+  audio.currentTime = Math.max(0, Math.min(audio.duration, p * audio.duration));
 }
 
-// ═══ VOLUME ═══
-function setVol(e, showId, n){
+function setVolume(e, sid, n){
   e.stopPropagation();
-  const track = document.getElementById(`vtrak-${showId}-${n}`);
-  if(!track) return;
-  const rect = track.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  vol = Math.max(0, Math.min(1, pct));
+  const bar = document.getElementById(`vbar-${sid}-${n}`);
+  const r   = bar.getBoundingClientRect();
+  vol = Math.max(0, Math.min(1, (e.clientX-r.left)/r.width));
   audio.volume = vol;
-  isMuted = vol === 0;
-  updateVolUI(showId, n);
+  muted = vol === 0;
+  audio.muted = muted;
+  updateVol(sid, n);
+}
+function toggleMute(sid, n){
+  muted = !muted;
+  audio.muted = muted;
+  updateVol(sid, n);
+}
+function updateVol(sid, n){
+  const f = document.getElementById(`vfill-${sid}-${n}`);
+  const i = document.getElementById(`vico-${sid}-${n}`);
+  if(f) f.style.width = (muted?0:vol*100)+'%';
+  if(i) i.textContent = muted||vol===0 ? '🔇' : vol<0.5 ? '🔉' : '🔊';
 }
 
-function toggleMute(showId, n){
-  isMuted = !isMuted;
-  audio.muted = isMuted;
-  updateVolUI(showId, n);
+function cycleSpeed(sid, n){
+  speedIdx = (speedIdx+1) % SPEEDS.length;
+  audio.playbackRate = SPEEDS[speedIdx];
+  const btn = document.getElementById(`spd-${sid}-${n}`);
+  if(btn){ btn.textContent=SPEEDS[speedIdx]+'x'; btn.classList.toggle('on', SPEEDS[speedIdx]!==1); }
 }
 
-function updateVolUI(showId, n){
-  const fill = document.getElementById(`vfill-${showId}-${n}`);
-  const icon = document.getElementById(`vico-${showId}-${n}`);
-  if(fill) fill.style.width = (isMuted ? 0 : vol*100)+'%';
-  if(icon) icon.textContent = isMuted || vol===0 ? '🔇' : vol<0.5 ? '🔉' : '🔊';
-}
-
-// ═══ SPEED ═══
-function cycleSpeed(showId, n){
-  speedIdx = (speedIdx + 1) % speeds.length;
-  currentSpeed = speeds[speedIdx];
-  audio.playbackRate = currentSpeed;
-  const btn = document.getElementById(`spd-${showId}-${n}`);
-  if(btn) btn.textContent = currentSpeed + 'x';
-}
-
-// ═══ SLEEP TIMER ═══
-let sleepTimer = null;
-function setSleep(showId, n){
-  const options = ['۱۵ دقیقه','۳۰ دقیقه','۴۵ دقیقه','۱ ساعت','لغو'];
-  const mins = [15,30,45,60,0];
-  // Simple cycle
-  const btn = document.getElementById(`sleep-${showId}-${n}`);
-  if(!btn) return;
-  const cur = btn.dataset.step ? parseInt(btn.dataset.step) : 0;
-  const next = (cur + 1) % options.length;
-  btn.dataset.step = next;
-  btn.textContent = '⏱ '+options[next];
-  if(sleepTimer){ clearTimeout(sleepTimer); sleepTimer = null; }
-  if(mins[next] > 0){
-    sleepTimer = setTimeout(()=>{ audio.pause(); toast('تایمر خواب: پخش متوقف شد'); }, mins[next]*60*1000);
-    toast(`تایمر: ${options[next]}`);
-  } else {
+function cycleSleep(sid, n){
+  clearTimeout(sleepTimer); sleepTimer=null;
+  sleepStep = (sleepStep+1) % SLEEP.length;
+  const btn = document.getElementById(`slp-${sid}-${n}`);
+  if(SLEEP[sleepStep]===0){
+    if(btn) btn.textContent='⏱ تایمر'; btn && btn.classList.remove('on');
     toast('تایمر لغو شد');
-    btn.textContent = '⏱ تایمر';
-    btn.dataset.step = '';
+  } else {
+    const m=SLEEP[sleepStep];
+    if(btn){ btn.textContent=`⏱ ${m}د`; btn.classList.add('on'); }
+    sleepTimer = setTimeout(()=>{ audio.pause(); toast('تایمر: پخش متوقف شد'); sleepStep=0; if(btn){btn.textContent='⏱ تایمر';btn.classList.remove('on');} }, m*60000);
+    toast(`تایمر ${m} دقیقه‌ای فعال شد`);
   }
 }
 
-// ═══ RENDER ═══
+// ──────────────────────────────────────────
+// RSS LOADER
+// ──────────────────────────────────────────
+const rssCache = {};
+async function loadRSS(showId){
+  if(rssCache[showId]) return;
+  const show = SHOWS[showId];
+  const PROXIES = [
+    u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+    u => `https://thingproxy.freeboard.io/fetch/${u}`,
+  ];
+  let xml = null;
+  for(const proxy of PROXIES){
+    try{
+      const res = await fetch(proxy(show.rss), {signal:AbortSignal.timeout(9000)});
+      if(!res.ok) continue;
+      const ct = res.headers.get('content-type')||'';
+      let raw;
+      if(ct.includes('json')){
+        const j = await res.json();
+        raw = j.contents || j;
+      } else {
+        raw = await res.text();
+      }
+      if(typeof raw === 'string' && raw.includes('<enclosure')){
+        xml = new DOMParser().parseFromString(raw, 'text/xml');
+        break;
+      }
+    }catch(e){ continue; }
+  }
+  if(!xml) return;
+  const items = [...xml.querySelectorAll('item')].reverse(); // oldest→newest
+  items.forEach((item, idx)=>{
+    const url = item.querySelector('enclosure')?.getAttribute('url');
+    if(!url) return;
+    const ep  = show.episodes[show.episodes.length-1-idx] || show.episodes[idx];
+    if(ep){ sessionStorage.setItem(`${showId}:${ep.n}:url`, url); ep._url=url; }
+  });
+  rssCache[showId] = true;
+}
+
+// ──────────────────────────────────────────
+// RENDER
+// ──────────────────────────────────────────
 function getFiltered(){
-  const shows = activeShow === 'all' ? Object.values(SHOWS) : [SHOWS[activeShow]].filter(Boolean);
-  if(!searchQ) return shows;
-  return shows.map(show => ({
-    ...show,
-    episodes: show.episodes.filter(ep =>
-      ep.title.includes(searchQ) || ep.author.includes(searchQ) || ep.tags.some(t=>t.includes(searchQ)) || String(ep.n).includes(searchQ)
+  const list = activeShow==='all' ? Object.values(SHOWS) : [SHOWS[activeShow]].filter(Boolean);
+  if(!searchQ) return list;
+  return list.map(s=>({
+    ...s,
+    episodes: s.episodes.filter(e=>
+      e.title.includes(searchQ)||e.author.includes(searchQ)||e.tags.some(t=>t.includes(searchQ))||String(e.n).includes(searchQ)
     )
-  })).filter(s => s.episodes.length > 0);
+  })).filter(s=>s.episodes.length);
 }
 
 function render(){
   const filtered = getFiltered();
-  const main = document.getElementById('mainContent');
-  if(!filtered.length || filtered.every(s=>s.episodes.length===0)){
-    main.innerHTML = `<div class="empty"><div class="ei">🔍</div><p>اپیزودی پیدا نشد<br><small>با کلمه دیگری جستجو کنید</small></p></div>`;
+  const main = document.getElementById('main');
+  if(!filtered.length||filtered.every(s=>!s.episodes.length)){
+    main.innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--ink3)"><div style="font-size:2.8rem;margin-bottom:12px;opacity:.4">🔍</div><p style="font-size:.88rem">اپیزودی پیدا نشد</p></div>`;
     return;
   }
-  main.innerHTML = filtered.map((show,si)=>`
-    <div class="show-block" id="show-${show.id}">
-      ${renderShowHeader(show,si)}
-      <div class="section-lbl">اپیزودها — جدیدترین اول</div>
-      ${show.episodes.map((ep,ei)=>renderCard(show,ep,si,ei)).join('')}
-    </div>
-  `).join('');
-
-  // Intersection observer
+  main.innerHTML = filtered.map((show,si)=>renderShow(show,si)).join('');
   requestAnimationFrame(()=>{
     const obs = new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
-      });
-    },{threshold:.05,rootMargin:'0px 0px -24px 0px'});
-    document.querySelectorAll('.ep-card,.show-header').forEach(el=>obs.observe(el));
+      entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);} });
+    },{threshold:.05,rootMargin:'0px 0px -20px 0px'});
+    document.querySelectorAll('.ep,.show-heading').forEach(el=>obs.observe(el));
   });
-
-  // Liquid hover
-  document.querySelectorAll('.ep-card').forEach(card=>{
+  document.querySelectorAll('.ep').forEach(card=>{
     card.addEventListener('mousemove',e=>{
       const r=card.getBoundingClientRect();
       card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
       card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
     });
   });
-
-  // Restore active state
   if(activeKey){
-    const [sid,n] = activeKey.split(':');
-    const card = document.getElementById(`card-${sid}-${n}`);
-    if(card) card.classList.add('active');
+    const [sid,n]=activeKey.split(':');
+    document.getElementById(`card-${sid}-${n}`)?.classList.add('active');
   }
 }
 
-function renderShowHeader(show,si){
+function renderShow(show, si){
   return `
-    <div class="show-header" style="animation-delay:${si*.1}s">
-      <div class="show-cover" style="background:${show.colorDim};border:1px solid ${show.color}28">${show.icon}</div>
-      <div class="show-info">
-        <div class="show-name" style="color:${show.color}">${show.title}</div>
-        <div class="show-desc">${show.desc}</div>
-        <div class="show-stats">
-          ${show.totalEps ? `<div class="show-stat"><strong>${show.totalEps}</strong> اپیزود</div><div class="show-stat">•</div>` : ''}
-          <a class="rss-btn" href="${show.rss}" target="_blank" rel="noopener">🔔 RSS</a>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderCard(show,ep,si,ei){
-  const key = `${show.id}:${ep.n}`;
-  const isActive = activeKey === key;
-  const isPlaying_ = isActive && isPlaying;
-  return `
-    <div class="ep-card ${isActive?'active':''}"
-         id="card-${show.id}-${ep.n}"
-         style="animation-delay:${si*.1+ei*.07}s"
-         onclick="toggleCard('${show.id}','${ep.n}')">
-
-      <div class="ep-body">
-        <div class="ep-play-wrap">
-          <svg width="48" height="48" viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="22"/>
-            <circle class="prog-ring" id="ring-${show.id}-${ep.n}" cx="24" cy="24" r="22"/>
-          </svg>
-          <button class="ep-play-btn" id="pbtn-${show.id}-${ep.n}"
-                  onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}')">
-            ${isPlaying_ ? '⏸' : '▶'}
-          </button>
-        </div>
-        <div class="ep-info">
-          <div class="ep-num" style="color:${show.color}">${show.title} — اپیزود ${toFa(ep.n)}</div>
-          <div class="ep-title">${ep.title}</div>
-          <div class="ep-meta">
-            ${ep.tags.map(t=>`<span class="ep-tag">${t}</span>`).join('')}
-            <span class="ep-dur">${ep.dur}</span>
+    <div class="show-section">
+      <div class="show-heading" style="animation-delay:${si*.08}s">
+        <div class="show-icon" style="background:${show.dim};border:1px solid ${show.color}30;color:${show.color}">${show.icon}</div>
+        <div class="show-text">
+          <div class="name" style="color:${show.color}">${show.title}</div>
+          <div class="desc">${show.desc}</div>
+          <div class="meta">
+            ${show.totalEps?`<span class="show-badge">${show.totalEps} اپیزود</span>`:''}
+            <a class="rss-link" href="${show.rss}" target="_blank" rel="noopener">🔔 RSS</a>
           </div>
         </div>
-        <div class="ep-wave">${'<div class="wb"></div>'.repeat(7)}</div>
+      </div>
+      <div class="eps-label">اپیزودها — جدیدترین اول</div>
+      ${show.episodes.map((ep,ei)=>renderEp(show,ep,si,ei)).join('')}
+    </div>`;
+}
+
+function renderEp(show, ep, si, ei){
+  const key = `${show.id}:${ep.n}`;
+  const act = activeKey===key;
+  const isP = act && playing;
+  return `
+    <div class="ep ${act?'active':''}" id="card-${show.id}-${ep.n}"
+         style="animation-delay:${si*.08+ei*.06}s"
+         onclick="toggleEp('${show.id}','${ep.n}')">
+
+      <div class="ep-row">
+        <div class="ep-num-badge">
+          <span>${toFa(ep.n)}</span>
+          <span class="ep-n-label">اپیزود</span>
+        </div>
+        <div class="ep-main">
+          <div class="ep-show-tag" style="color:${show.color}">${show.title}</div>
+          <div class="ep-title">${ep.title}</div>
+          <div class="ep-tags">
+            ${ep.tags.map(t=>`<span class="ep-tag">${t}</span>`).join('')}
+            <span class="ep-dur-tag">⏱ ${ep.dur}</span>
+          </div>
+        </div>
+        <div class="ep-wave">
+          <div class="b"></div><div class="b"></div><div class="b"></div>
+          <div class="b"></div><div class="b"></div><div class="b"></div>
+        </div>
+        <button class="ep-play" onclick="event.stopPropagation();toggleEp('${show.id}','${ep.n}')">${isP?'⏸':'▶'}</button>
       </div>
 
       <!-- INLINE PLAYER -->
-      <div class="ep-player">
-        <div class="player-inner">
-          <!-- Top row -->
-          <div class="pl-top">
-            <div class="pl-art" style="background:${show.colorDim};border:1px solid ${show.color}30">${show.icon}</div>
-            <div class="pl-info">
-              <div class="pl-title">${ep.title}</div>
-              <div class="pl-author">${ep.author}</div>
+      <div class="ep-panel">
+        <div class="ep-panel-inner">
+          <div class="native-player">
+            <!-- header -->
+            <div class="np-header">
+              <div class="np-art" style="background:${show.dim};border:1px solid ${show.color}25">${show.icon}</div>
+              <div class="np-info">
+                <div class="np-t">${ep.title}</div>
+                <div class="np-a">${ep.author}</div>
+              </div>
+              <span class="np-status" id="np-status-${show.id}-${ep.n}"></span>
             </div>
-          </div>
-
-          <!-- Progress -->
-          <div class="pl-prog-wrap">
-            <span class="pl-time" id="cur-${show.id}-${ep.n}">۰:۰۰</span>
-            <div class="pl-track" id="track-${show.id}-${ep.n}"
-                 onclick="seekTrack(event,'${show.id}','${ep.n}')">
-              <div class="pl-fill" id="fill-${show.id}-${ep.n}">
-                <div class="pl-thumb"></div>
+            <!-- progress -->
+            <div class="np-prog">
+              <span class="np-time" id="np-cur-${show.id}-${ep.n}">۰:۰۰</span>
+              <div class="np-bar" id="np-bar-${show.id}-${ep.n}"
+                   onclick="seekBar(event,'${show.id}','${ep.n}')">
+                <div class="np-bar-fill" id="np-fill-${show.id}-${ep.n}"></div>
+              </div>
+              <span class="np-time" id="np-dur-${show.id}-${ep.n}">—</span>
+            </div>
+            <!-- main controls -->
+            <div class="np-controls">
+              <button class="np-btn skip-label" onclick="event.stopPropagation();skip(-30)">⏮<br>۳۰</button>
+              <button class="np-btn skip-label" onclick="event.stopPropagation();skip(-10)">↩<br>۱۰</button>
+              <button class="np-btn play-main" id="npbtn-${show.id}-${ep.n}"
+                      onclick="event.stopPropagation();toggleEp('${show.id}','${ep.n}')">${isP?'⏸':'▶'}</button>
+              <button class="np-btn skip-label" onclick="event.stopPropagation();skip(10)">↪<br>۱۰</button>
+              <button class="np-btn skip-label" onclick="event.stopPropagation();skip(30)">⏭<br>۳۰</button>
+            </div>
+            <!-- bottom controls -->
+            <div class="np-bottom">
+              <div class="np-vol" onclick="event.stopPropagation()">
+                <button class="vol-ico" id="vico-${show.id}-${ep.n}" onclick="toggleMute('${show.id}','${ep.n}')">🔊</button>
+                <div class="vol-bar" id="vbar-${show.id}-${ep.n}" onclick="setVolume(event,'${show.id}','${ep.n}')">
+                  <div class="vol-fill" id="vfill-${show.id}-${ep.n}"></div>
+                </div>
+              </div>
+              <div class="np-right" onclick="event.stopPropagation()">
+                <button class="np-chip" id="spd-${show.id}-${ep.n}"
+                        onclick="cycleSpeed('${show.id}','${ep.n}')">۱x</button>
+                <button class="np-chip" id="slp-${show.id}-${ep.n}"
+                        onclick="cycleSleep('${show.id}','${ep.n}')">⏱ تایمر</button>
               </div>
             </div>
-            <span class="pl-time" id="dur-${show.id}-${ep.n}">--:--</span>
-          </div>
-
-          <!-- Controls -->
-          <div class="pl-controls">
-            <button class="pl-btn" onclick="event.stopPropagation();skipTime(-15)" title="۱۵ ثانیه قبل">⏮ ۱۵</button>
-            <button class="pl-btn" onclick="event.stopPropagation();skipTime(-5)" title="۵ ثانیه قبل">↩ ۵</button>
-            <button class="pl-btn main" id="pbtn2-${show.id}-${ep.n}"
-                    onclick="event.stopPropagation();toggleCard('${show.id}','${ep.n}')">
-              ${isPlaying_ ? '⏸' : '▶'}
-            </button>
-            <button class="pl-btn" onclick="event.stopPropagation();skipTime(5)" title="۵ ثانیه بعد">↪ ۵</button>
-            <button class="pl-btn" onclick="event.stopPropagation();skipTime(15)" title="۱۵ ثانیه بعد">⏭ ۱۵</button>
-          </div>
-
-          <!-- Bottom: volume + speed + sleep -->
-          <div class="pl-bottom">
-            <div class="pl-vol-wrap" onclick="event.stopPropagation()">
-              <button class="pl-vol-icon" id="vico-${show.id}-${ep.n}" onclick="toggleMute('${show.id}','${ep.n}')">🔊</button>
-              <div class="pl-vol-track" id="vtrak-${show.id}-${ep.n}"
-                   onclick="setVol(event,'${show.id}','${ep.n}')">
-                <div class="pl-vol-fill" id="vfill-${show.id}-${ep.n}"></div>
-              </div>
+            <!-- Spotify fallback -->
+            <div class="spotify-fb" id="sp-fb-${show.id}-${ep.n}">
+              <div class="spotify-fb-label">پخش از Spotify:</div>
+              <iframe src="" frameborder="0" allowfullscreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
             </div>
-            <button class="pl-speed" id="spd-${show.id}-${ep.n}"
-                    onclick="event.stopPropagation();cycleSpeed('${show.id}','${ep.n}')">
-              ${currentSpeed}x
-            </button>
-            <button class="pl-speed" id="sleep-${show.id}-${ep.n}"
-                    onclick="event.stopPropagation();setSleep('${show.id}','${ep.n}')">
-              ⏱ تایمر
-            </button>
           </div>
-
-          <!-- Spotify fallback iframe (hidden by default) -->
-          <iframe id="spotify-fb-${show.id}-${ep.n}"
-            style="display:none;width:100%;height:80px;border:none;border-radius:10px;margin-top:8px"
-            frameborder="0" allowfullscreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy">
-          </iframe>
         </div>
       </div>
 
       <!-- ACTIONS -->
       <div class="ep-actions" onclick="event.stopPropagation()">
-        <a class="ep-act primary" href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank" rel="noopener">
+        <a class="ep-action pri" href="https://open.spotify.com/episode/${ep.spotifyId}" target="_blank" rel="noopener">
           🎵 <span>Spotify</span>
         </a>
-        <button class="ep-act" onclick="shareEp('${ep.spotifyId}','${ep.title}')">🔗 <span>اشتراک</span></button>
-        <button class="ep-act" onclick="copyLnk('${ep.spotifyId}')">📋 <span>کپی</span></button>
+        <button class="ep-action" onclick="shareEp('${ep.spotifyId}','${ep.title}')">🔗 <span>اشتراک</span></button>
+        <button class="ep-action" onclick="copyLink('${ep.spotifyId}')">📋 <span>کپی لینک</span></button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ═══ RSS LOADER ═══
-const rssLoaded = {};
-async function loadRSSForShow(showId){
-  if(rssLoaded[showId]) return;
-  const show = SHOWS[showId];
-  if(!show) return;
-  try{
-    // Use a CORS proxy for RSS
-    const proxies = [
-      `https://corsproxy.io/?${encodeURIComponent(show.rss)}`,
-      `https://api.allorigins.win/get?url=${encodeURIComponent(show.rss)}`
-    ];
-    let text = null;
-    for(const proxy of proxies){
-      try{
-        const res = await fetch(proxy, {signal: AbortSignal.timeout(8000)});
-        if(!res.ok) continue;
-        const data = await res.json().catch(async()=>({contents: await res.text()}));
-        text = data.contents || data;
-        if(typeof text === 'string' && text.includes('<enclosure')) break;
-      }catch(e){ continue; }
-    }
-    if(!text) return;
-    const xml = new DOMParser().parseFromString(text,'text/xml');
-    const items = [...xml.querySelectorAll('item')];
-    // Map items to episodes (reverse order = oldest first in RSS typically)
-    items.forEach((item, idx)=>{
-      const enclosure = item.querySelector('enclosure');
-      const audioUrl = enclosure?.getAttribute('url');
-      if(!audioUrl) return;
-      // Try to match by position
-      const ep = show.episodes[idx] || show.episodes[show.episodes.length - 1 - idx];
-      if(ep){
-        ep.audioSrc = audioUrl;
-        sessionStorage.setItem(`${showId}:${ep.n}:audio`, audioUrl);
-      }
-    });
-    rssLoaded[showId] = true;
-    // Update durations
-    if(show.totalEps === null && items.length > 0){
-      show.totalEps = items.length;
-    }
-  }catch(e){ /* silent */ }
-}
-
-// ═══ SHARE / COPY ═══
+// ──────────────────────────────────────────
+// SHARE / COPY
+// ──────────────────────────────────────────
 function shareEp(id, title){
-  const url = `https://open.spotify.com/episode/${id}`;
-  if(navigator.share){
-    navigator.share({title:'رادیو بکت | '+title, url}).catch(()=>{});
-  } else {
-    doCopy(url); toast('لینک کپی شد ✓');
-  }
+  const url=`https://open.spotify.com/episode/${id}`;
+  if(navigator.share){ navigator.share({title:'رادیو بکت | '+title,url}).catch(()=>{}); }
+  else { doCopy(url); toast('لینک کپی شد ✓'); }
 }
-function copyLnk(id){
-  doCopy(`https://open.spotify.com/episode/${id}`);
-  toast('لینک کپی شد ✓');
-}
-function doCopy(t){
-  navigator.clipboard?.writeText(t).catch(()=>fbCopy(t))||fbCopy(t);
-}
-function fbCopy(t){
-  const el=document.createElement('textarea');
-  el.value=t;el.style.cssText='position:fixed;opacity:0';
-  document.body.appendChild(el);el.select();
-  document.execCommand('copy');document.body.removeChild(el);
-}
+function copyLink(id){ doCopy(`https://open.spotify.com/episode/${id}`); toast('لینک کپی شد ✓'); }
+function doCopy(t){ navigator.clipboard?.writeText(t).catch(()=>fb(t))||fb(t); }
+function fb(t){ const el=document.createElement('textarea'); el.value=t; el.style.cssText='position:fixed;opacity:0'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
 
-// ═══ TOAST ═══
-let toastT;
-function toast(msg){
-  const t=document.getElementById('toast');
-  clearTimeout(toastT);
-  t.textContent=msg;t.classList.add('show');
-  toastT=setTimeout(()=>t.classList.remove('show'),2800);
-}
+// ──────────────────────────────────────────
+// TOAST / SCROLL
+// ──────────────────────────────────────────
+let tt;
+function toast(msg){ const t=document.getElementById('toast'); clearTimeout(tt); t.textContent=msg; t.classList.add('show'); tt=setTimeout(()=>t.classList.remove('show'),2800); }
+window.addEventListener('scroll',()=>{ document.getElementById('goTop').classList.toggle('show',scrollY>240); },{passive:true});
 
-// ═══ UTILS ═══
-function toFa(n){return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}
-function fmtTime(s){
-  if(!s||isNaN(s)) return '۰:۰۰';
-  const m=Math.floor(s/60);const sec=Math.floor(s%60);
-  return toFa(m)+':'+toFa(String(sec).padStart(2,'0'));
-}
-function getEp(showId, n){
-  return SHOWS[showId]?.episodes.find(e=>e.n==n);
-}
-
-// ═══ SCROLL TOP ═══
-const goTopBtn=document.getElementById('goTop');
-window.addEventListener('scroll',()=>{
-  goTopBtn.classList.toggle('show',window.scrollY>260);
-},{passive:true});
-
-// ═══ KEYBOARD SHORTCUTS ═══
-document.addEventListener('keydown', e => {
-  if(e.target.tagName === 'INPUT') return;
-  if(e.key === ' '){ e.preventDefault(); toggleGlobalPlay(); }
-  if(e.key === 'ArrowLeft') skipTime(10);
-  if(e.key === 'ArrowRight') skipTime(-10);
-  if(e.key === 'ArrowUp'){ audio.volume = Math.min(1, audio.volume+0.1); }
-  if(e.key === 'ArrowDown'){ audio.volume = Math.max(0, audio.volume-0.1); }
-  if(e.key === 'm' || e.key === 'M'){ audio.muted = !audio.muted; }
+// ──────────────────────────────────────────
+// KEYBOARD
+// ──────────────────────────────────────────
+document.addEventListener('keydown', e=>{
+  if(e.target.tagName==='INPUT') return;
+  if(e.key===' '){ e.preventDefault(); togglePlay(); }
+  if(e.key==='ArrowRight') skip(-10);
+  if(e.key==='ArrowLeft')  skip(10);
+  if(e.key==='ArrowUp')   { audio.volume=Math.min(1,audio.volume+.1); }
+  if(e.key==='ArrowDown') { audio.volume=Math.max(0,audio.volume-.1); }
 });
 
-// ═══ BOOT ═══
-render();
+// ──────────────────────────────────────────
+// UTILS
+// ──────────────────────────────────────────
+function toFa(n){ return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+function fmtT(s){ if(!s||isNaN(s)) return '۰:۰۰'; const m=Math.floor(s/60),r=Math.floor(s%60); return toFa(m)+':'+toFa(String(r).padStart(2,'0')); }
+function getEp(sid,n){ return SHOWS[sid]?.episodes.find(e=>String(e.n)===String(n)); }
 
-// Preload RSS feeds in background
-setTimeout(()=>{
-  Object.keys(SHOWS).forEach(id => loadRSSForShow(id));
-}, 1500);
+// ──────────────────────────────────────────
+// BOOT
+// ──────────────────────────────────────────
+render();
+// preload RSS in background
+setTimeout(()=>Object.keys(SHOWS).forEach(id=>loadRSS(id)), 2000);
 </script>
 </body>
 </html>
